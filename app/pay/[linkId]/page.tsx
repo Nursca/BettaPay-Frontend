@@ -1,0 +1,183 @@
+"use client";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useWalletStore } from '@/lib/store/walletStore';
+import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay';
+import { ShieldCheck, ArrowRight, QrCode } from 'lucide-react';
+import { toast } from 'sonner';
+
+export default function PaymentLinkPage() {
+  const router = useRouter();
+  const { isConnected, connect, address } = useWalletStore();
+  
+  // Mock data for this link
+  const linkData = {
+    merchantName: 'Merchant Corp',
+    label: 'Consulting Retainer Q3',
+    type: 'open', // 'fixed' or 'open'
+    currency: 'USDC',
+    fixedAmount: 0,
+  };
+
+  const [amount, setAmount] = useState(linkData.type === 'fixed' ? linkData.fixedAmount.toString() : '');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [step, setStep] = useState<'details' | 'review'>('details');
+
+  const handleContinue = () => {
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+    setStep('review');
+  };
+
+  const handlePay = async () => {
+    if (!isConnected) {
+      await connect();
+      if (!useWalletStore.getState().isConnected) return;
+    }
+
+    setIsProcessing(true);
+    
+    // Simulate Freighter signing and network confirmation
+    setTimeout(() => {
+      setIsProcessing(false);
+      // Generate mock txId
+      const txId = 'tx_' + Math.random().toString(36).substr(2, 9);
+      router.push(`/pay/status/${txId}?status=success`);
+    }, 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        
+        {/* Merchant Branding Header */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-16 h-16 rounded-full bg-brand-surface border-2 border-brand-accent flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(240,165,0,0.2)]">
+            <ShieldCheck className="w-8 h-8 text-brand-accent" />
+          </div>
+          <h1 className="text-xl font-semibold">{linkData.merchantName}</h1>
+          <p className="text-muted-foreground text-sm">{linkData.label}</p>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {step === 'details' && (
+            <motion.div
+              key="details"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+            >
+              <Card className="border-border/50 bg-brand-surface shadow-xl">
+                <CardHeader>
+                  <h2 className="text-lg font-medium text-center">Payment Details</h2>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {linkData.type === 'fixed' ? (
+                    <div className="text-center py-6">
+                      <div className="text-4xl font-bold text-brand-text-primary">
+                        <CurrencyDisplay amount={linkData.fixedAmount} currency={linkData.currency} />
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        ≈ ₦{(linkData.fixedAmount * 1550).toLocaleString()}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Amount ({linkData.currency})</label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <Input 
+                          type="number" 
+                          placeholder="0.00" 
+                          className="pl-8 text-lg h-14 bg-background/50 border-border/50 focus-visible:ring-brand-accent"
+                          value={amount}
+                          onChange={(e) => setAmount(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter className="flex flex-col gap-3">
+                  <Button className="w-full h-12 text-md" onClick={handleContinue}>
+                    Continue
+                  </Button>
+                  <Button variant="ghost" className="w-full h-12 text-muted-foreground">
+                    <QrCode className="w-4 h-4 mr-2" />
+                    Show QR Code
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          )}
+
+          {step === 'review' && (
+            <motion.div
+              key="review"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+            >
+              <Card className="border-border/50 bg-brand-surface shadow-xl">
+                <CardHeader>
+                  <h2 className="text-lg font-medium text-center">Review Payment</h2>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="bg-background/50 rounded-xl p-4 space-y-3 border border-border/50">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Amount</span>
+                      <span className="font-semibold"><CurrencyDisplay amount={Number(amount)} currency={linkData.currency} /></span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Network Fee</span>
+                      <span className="font-semibold">0.00001 XLM</span>
+                    </div>
+                    <div className="h-px bg-border/50 w-full" />
+                    <div className="flex justify-between items-center text-lg">
+                      <span className="text-muted-foreground">Total</span>
+                      <span className="font-bold text-brand-accent"><CurrencyDisplay amount={Number(amount)} currency={linkData.currency} /></span>
+                    </div>
+                  </div>
+
+                  {isConnected && address && (
+                    <div className="text-sm text-center text-muted-foreground">
+                      Sending from: <span className="font-mono text-brand-text-primary">{address.substring(0, 6)}...{address.substring(address.length - 4)}</span>
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter className="flex flex-col gap-3">
+                  <Button 
+                    className="w-full h-12 text-md group" 
+                    onClick={handlePay}
+                    disabled={isProcessing}
+                  >
+                    {isProcessing ? 'Processing...' : (isConnected ? 'Sign & Pay' : 'Connect Wallet to Pay')}
+                    {!isProcessing && <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-muted-foreground" 
+                    onClick={() => setStep('details')}
+                    disabled={isProcessing}
+                  >
+                    Back
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="mt-8 text-center text-xs text-muted-foreground">
+          Powered by <span className="font-semibold text-brand-text-primary">BettaPay</span>
+        </div>
+      </div>
+    </div>
+  );
+}

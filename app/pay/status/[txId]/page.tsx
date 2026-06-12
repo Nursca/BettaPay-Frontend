@@ -1,0 +1,158 @@
+"use client";
+
+import { useEffect, useState } from 'react';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Check, X, Loader2, ExternalLink, ArrowLeft } from 'lucide-react';
+import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay';
+import { truncateAddress } from '@/lib/utils/format';
+
+type Status = 'processing' | 'success' | 'failed';
+
+export default function PaymentStatusPage() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const txId = params.txId as string;
+  const initialStatus = (searchParams.get('status') as Status) || 'processing';
+  
+  const [status, setStatus] = useState<Status>(initialStatus);
+
+  // Mock checking status
+  useEffect(() => {
+    if (status === 'processing') {
+      const timer = setTimeout(() => {
+        setStatus('success');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
+
+  const mockData = {
+    amount: 1500,
+    currency: 'USDC',
+    merchantName: 'Merchant Corp',
+    txHash: '1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b'
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <AnimatePresence mode="wait">
+          {status === 'processing' && (
+            <motion.div
+              key="processing"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              className="flex flex-col items-center justify-center space-y-6 text-center"
+            >
+              <div className="relative">
+                <div className="w-24 h-24 rounded-full border-4 border-brand-accent/20 border-t-brand-accent animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-brand-surface border border-border flex items-center justify-center shadow-lg">
+                    <Loader2 className="w-6 h-6 text-brand-accent animate-spin" />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold">Confirming Payment</h2>
+                <p className="text-muted-foreground mt-2">Waiting for Stellar network confirmation...</p>
+              </div>
+            </motion.div>
+          )}
+
+          {status === 'success' && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full"
+            >
+              <Card className="border-border/50 bg-brand-surface overflow-hidden">
+                <div className="h-2 bg-brand-success w-full" />
+                <CardContent className="pt-8 pb-8 px-6 flex flex-col items-center text-center space-y-6">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", bounce: 0.5, delay: 0.2 }}
+                    className="w-20 h-20 rounded-full bg-brand-success/10 border-2 border-brand-success flex items-center justify-center"
+                  >
+                    <Check className="w-10 h-10 text-brand-success" />
+                  </motion.div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-bold">Payment Successful</h2>
+                    <p className="text-muted-foreground mt-1">To {mockData.merchantName}</p>
+                  </div>
+
+                  <div className="text-4xl font-bold text-brand-text-primary">
+                    <CurrencyDisplay amount={mockData.amount} currency={mockData.currency} />
+                  </div>
+
+                  <div className="w-full bg-background/50 rounded-lg p-4 space-y-3 text-sm border border-border/50 text-left">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Transaction ID</span>
+                      <span className="font-mono">{truncateAddress(txId)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Network Hash</span>
+                      <a href="#" className="font-mono text-brand-accent hover:underline flex items-center gap-1">
+                        {truncateAddress(mockData.txHash)}
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+
+                  <Button className="w-full h-12" onClick={() => router.push('/')}>
+                    Return to Merchant
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {status === 'failed' && (
+            <motion.div
+              key="failed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full"
+            >
+              <Card className="border-border/50 bg-brand-surface overflow-hidden">
+                <div className="h-2 bg-brand-error w-full" />
+                <CardContent className="pt-8 pb-8 px-6 flex flex-col items-center text-center space-y-6">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", bounce: 0.5 }}
+                    className="w-20 h-20 rounded-full bg-brand-error/10 border-2 border-brand-error flex items-center justify-center"
+                  >
+                    <X className="w-10 h-10 text-brand-error" />
+                  </motion.div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-bold">Payment Failed</h2>
+                    <p className="text-muted-foreground mt-1">The transaction was rejected by the network.</p>
+                  </div>
+
+                  <div className="w-full flex gap-3 mt-4">
+                    <Button variant="outline" className="flex-1" onClick={() => router.back()}>
+                      <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                    </Button>
+                    <Button className="flex-1" onClick={() => setStatus('processing')}>
+                      Try Again
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}

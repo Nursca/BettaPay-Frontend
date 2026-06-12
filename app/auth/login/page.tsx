@@ -9,8 +9,6 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { toast } from 'sonner';
-
 import { loginSchema, LoginFormValues } from '@/lib/utils/validation';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useWalletStore } from '@/lib/store/walletStore';

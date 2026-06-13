@@ -152,29 +152,29 @@ export default function LoginPage() {
     >
       <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} onConnected={onWalletConnected} />
 
-      <Card className="rounded-2xl overflow-hidden bg-card/95 ring-1 ring-border/10 shadow-lg">
+      <Card className="rounded-2xl overflow-hidden bg-card border border-border shadow-2xl">
         <CardHeader className="space-y-2 text-center pb-8 pt-8">
-            <CardTitle className="text-3xl font-bold tracking-tight text-brand-text-primary">Welcome back</CardTitle>
-            <CardDescription className="text-brand-text-muted text-base">
+            <CardTitle className="text-3xl font-bold tracking-tight text-foreground">Welcome back</CardTitle>
+            <CardDescription className="text-muted-foreground text-base">
               Sign in to manage your payments
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="space-y-5 px-8">
               <div className="space-y-2.5">
-                <Label htmlFor="email" className="text-brand-text-muted">Email Address</Label>
+                <Label htmlFor="email" className="text-muted-foreground">Email Address</Label>
                 <Input 
                   id="email" 
                   type="email" 
                   placeholder="name@company.com" 
                   {...register('email')} 
-                  className="bg-input h-12 border-border text-brand-text-primary placeholder:text-brand-text-muted focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
+                  className="bg-input h-12 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
                 />
                 {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
               </div>
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-brand-text-muted">Password</Label>
+                  <Label htmlFor="password" className="text-muted-foreground">Password</Label>
                   <Link href="#" className="text-sm text-brand-accent hover:opacity-90 transition-colors">
                     Forgot password?
                   </Link>
@@ -184,7 +184,7 @@ export default function LoginPage() {
                   type="password" 
                   placeholder="••••••••"
                   {...register('password')} 
-                  className="bg-input h-12 border-border text-brand-text-primary placeholder:text-brand-text-muted focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
+                  className="bg-input h-12 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
                 />
                 {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
               </div>
@@ -204,14 +204,14 @@ export default function LoginPage() {
                   <span className="w-full border-t border-white/10" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-brand-text-muted">Or continue with</span>
+                  <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
                 </div>
               </div>
 
               <Button 
                 type="button" 
                 variant="outline"
-                className="w-full h-12 text-base font-medium bg-input border-border text-brand-text-primary hover:opacity-95 transition-all"
+                className="w-full h-12 text-base font-medium bg-input border-border text-foreground hover:opacity-90 transition-all"
                 onClick={() => setWalletModalOpen(true)}
                 disabled={isLoading || isWalletLoading}
               >
@@ -219,7 +219,7 @@ export default function LoginPage() {
                 Freighter Wallet
               </Button>
 
-              <div className="text-sm text-center text-brand-text-muted">
+              <div className="text-sm text-center text-muted-foreground">
                 Don&apos;t have an account?{' '}
                 <Link href="/auth/register" className="text-brand-accent hover:opacity-90 transition-colors font-medium">
                   Create one now

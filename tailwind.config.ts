@@ -12,22 +12,6 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Custom palette from spec
-        brand: {
-          primary: "hsl(var(--brand-primary))",
-          surface: "hsl(var(--brand-surface))",
-          "surface-alt": "hsl(var(--brand-surface-alt))",
-          accent: "hsl(var(--brand-accent))",
-          "accent-hover": "hsl(var(--brand-accent-hover))",
-          success: "hsl(var(--brand-success))",
-          warning: "hsl(var(--brand-warning))",
-          error: "hsl(var(--brand-error))",
-          "text-primary": "hsl(var(--brand-text-primary))",
-          "text-secondary": "hsl(var(--brand-text-secondary))",
-          "text-muted": "hsl(var(--brand-text-muted))",
-          border: "hsl(var(--brand-border))",
-        },
-        // Shadcn defaults that map to variables
         card: {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
@@ -71,10 +55,24 @@ const config: Config = {
           foreground: "var(--sidebar-foreground)",
           primary: "var(--sidebar-primary)",
           "primary-foreground": "var(--sidebar-primary-foreground)",
-          accent: "var(--sidebar-sidebar-accent)",
+          accent: "var(--sidebar-accent)",
           "accent-foreground": "var(--sidebar-accent-foreground)",
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
+        },
+        brand: {
+          primary: "var(--brand-primary)",
+          surface: "var(--brand-surface)",
+          "surface-alt": "var(--brand-surface-alt)",
+          accent: "var(--brand-accent)",
+          "accent-hover": "var(--brand-accent-hover)",
+          success: "var(--brand-success)",
+          warning: "var(--brand-warning)",
+          error: "var(--brand-error)",
+          "text-primary": "var(--brand-text-primary)",
+          "text-secondary": "var(--brand-text-secondary)",
+          "text-muted": "var(--brand-text-muted)",
+          border: "var(--brand-border)",
         },
       },
       borderRadius: {

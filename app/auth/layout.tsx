@@ -2,7 +2,7 @@ import { ShieldCheck } from 'lucide-react';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] flex">
+    <div className="min-h-screen bg-background flex">
       {/* Left Pane - Form Area */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center relative p-6 sm:p-12">
         {/* Mobile Logo */}

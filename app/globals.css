@@ -9,63 +9,56 @@
 }
 
 @layer base {
-  .theme {
-    --font-heading: var(--font-sans);
-    --font-sans: var(--font-sans);
-  }
   :root {
-    /* Light theme tokens (numeric HSL components) */
-    --background: 210 20% 98%; /* very light */
-    --foreground: 215 12% 8%;
-    --card: 0 0% 100%;
-    --card-foreground: 215 12% 8%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 12% 8%;
-    --primary: 42 96% 55%; /* warm gold/orange */
-    --primary-foreground: 220 8% 8%;
-    --secondary: 220 7% 94%;
-    --secondary-foreground: 215 12% 8%;
-    --muted: 210 16% 94%;
-    --muted-foreground: 215 8% 45%;
-    --accent: 205 90% 56%;
-    --accent-foreground: 220 8% 8%;
-    --destructive: 358 75% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 215 16% 90%;
-    --input: 215 16% 94%;
-    --ring: 42 96% 55%;
-    --radius: 0.5rem;
+    /* Clean white-background light theme */
+    --background: #FFFFFF;
+    --foreground: #0F172A;
+    --card: #FFFFFF;
+    --card-foreground: #0F172A;
+    --popover: #FFFFFF;
+    --popover-foreground: #0F172A;
+    --primary: #F0A500;
+    --primary-foreground: #FFFFFF;
+    --secondary: #F8FAFC;
+    --secondary-foreground: #0F172A;
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+    --accent: #F1F5F9;
+    --accent-foreground: #0F172A;
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+    --border: #E2E8F0;
+    --input: #F8FAFC;
+    --ring: #F0A500;
+    --radius: 0.75rem;
 
-    /* Brand tokens (used via tailwind theme mappings) */
-    --brand-primary: 42 96% 55%;
-    --brand-surface: 0 0% 100%;
-    --brand-accent: 205 90% 56%;
-    --brand-success: 142 72% 29%;
-    --brand-warning: 38 92% 50%;
-    --brand-error: 0 84% 60%;
-    --brand-text-primary: 215 12% 8%;
-    --brand-text-muted: 215 8% 45%;
-    --brand-border: 215 16% 90%;
-  }
+    /* Sidebar */
+    --sidebar: #FFFFFF;
+    --sidebar-foreground: #0F172A;
+    --sidebar-primary: #F0A500;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #F1F5F9;
+    --sidebar-accent-foreground: #0F172A;
+    --sidebar-border: #E2E8F0;
+    --sidebar-ring: #F0A500;
 
-  .dark {
-    /* Dark theme tokens (kept for dark mode) */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 7.9%;
-    --card-foreground: 0 0% 98%;
-    --primary: 42 96% 55%;
-    --primary-foreground: 240 5.9% 10%;
-    --muted: 240 6% 12%;
-    --muted-foreground: 240 5% 64.9%;
-    --border: 240 3.7% 15.9%;
-  }
-  /* Keep base font sizing and accessible defaults */
-  :root {
-    font-size: 16px;
+    /* Brand tokens */
+    --brand-primary: #F0A500;
+    --brand-surface: #FFFFFF;
+    --brand-surface-alt: #F8FAFC;
+    --brand-accent: #2563EB;
+    --brand-accent-hover: #1D4ED8;
+    --brand-success: #16A34A;
+    --brand-warning: #F59E0B;
+    --brand-error: #EF4444;
+    --brand-text-primary: #0F172A;
+    --brand-text-secondary: #334155;
+    --brand-text-muted: #64748B;
+    --brand-border: #E2E8F0;
   }
 
   html {
+    font-size: 16px;
     @apply font-sans antialiased;
   }
 
@@ -73,7 +66,6 @@
     @apply bg-background text-foreground leading-relaxed;
   }
 
-  /* Responsive centered container for main content */
   .container {
     max-width: 1200px;
     margin-left: auto;
@@ -82,12 +74,12 @@
     padding-right: 1rem;
   }
 
-  /* Focus ring improvements for keyboard users */
   :focus {
     outline: none !important;
   }
+
   :focus-visible {
-    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.15);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
     border-radius: 8px;
   }
 }

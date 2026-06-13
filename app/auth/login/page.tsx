@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
+
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
@@ -16,7 +16,6 @@ import { useWalletStore } from '@/lib/store/walletStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 const WalletModal = dynamic(() => import('@/components/wallet/WalletModal').then(m => m.WalletModal), { ssr: false });
 
@@ -144,90 +143,89 @@ export default function LoginPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="w-full"
-    >
+    <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} onConnected={onWalletConnected} />
 
-      <Card className="rounded-2xl overflow-hidden bg-card/95 ring-1 ring-border/10 shadow-lg">
-        <CardHeader className="space-y-2 text-center pb-8 pt-8">
-            <CardTitle className="text-3xl font-bold tracking-tight text-brand-text-primary">Welcome back</CardTitle>
-            <CardDescription className="text-brand-text-muted text-base">
-              Sign in to manage your payments
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <CardContent className="space-y-5 px-8">
-              <div className="space-y-2.5">
-                <Label htmlFor="email" className="text-brand-text-muted">Email Address</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="name@company.com" 
-                  {...register('email')} 
-                  className="bg-input h-12 border-border text-brand-text-primary placeholder:text-brand-text-muted focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
-                />
-                {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
-              </div>
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-brand-text-muted">Password</Label>
-                  <Link href="#" className="text-sm text-brand-accent hover:opacity-90 transition-colors">
-                    Forgot password?
-                  </Link>
-                </div>
-                <Input 
-                  id="password" 
-                  type="password" 
-                  placeholder="••••••••"
-                  {...register('password')} 
-                  className="bg-input h-12 border-border text-brand-text-primary placeholder:text-brand-text-muted focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
-                />
-                {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-6 pb-8 pt-4 px-8">
-              <Button 
-                type="submit" 
-                className="w-full h-12 text-base font-medium bg-primary text-white hover:bg-primary/90 shadow-[0_0_20px_rgba(240,165,0,0.3)] transition-all hover:shadow-[0_0_25px_rgba(240,165,0,0.5)]" 
-                disabled={isLoading || isWalletLoading}
-              >
-                {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                Sign In
-              </Button>
-              
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-white/10" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-brand-text-muted">Or continue with</span>
-                </div>
-              </div>
+      {/* Heading */}
+      <div className="mb-10">
+        <p className="text-xs font-semibold tracking-widest text-amber-500 uppercase mb-3">Merchant Portal</p>
+        <h1 className="text-4xl font-bold text-slate-900 leading-tight">Sign in to<br />your account</h1>
+        <p className="text-slate-400 mt-3 text-sm">
+          Don&apos;t have an account?{' '}
+          <Link href="/auth/register" className="text-amber-600 font-semibold hover:text-amber-700 transition-colors">
+            Create one free
+          </Link>
+        </p>
+      </div>
 
-              <Button 
-                type="button" 
-                variant="outline"
-                className="w-full h-12 text-base font-medium bg-input border-border text-brand-text-primary hover:opacity-95 transition-all"
-                onClick={() => setWalletModalOpen(true)}
-                disabled={isLoading || isWalletLoading}
-              >
-                {isWalletLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                Freighter Wallet
-              </Button>
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Email */}
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            Email Address
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="name@company.com"
+            {...register('email')}
+            className="h-12 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-300 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:border-amber-400 transition-all"
+          />
+          {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
+        </div>
 
-              <div className="text-sm text-center text-brand-text-muted">
-                Don&apos;t have an account?{' '}
-                <Link href="/auth/register" className="text-brand-accent hover:opacity-90 transition-colors font-medium">
-                  Create one now
-                </Link>
-              </div>
-            </CardFooter>
-          </form>
-      </Card>
-    </motion.div>
+        {/* Password */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Password
+            </Label>
+            <Link href="#" className="text-xs text-slate-400 hover:text-amber-600 transition-colors">
+              Forgot password?
+            </Link>
+          </div>
+          <Input
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            {...register('password')}
+            className="h-12 bg-white border border-slate-200 text-slate-900 placeholder:text-slate-300 rounded-xl text-sm focus-visible:ring-1 focus-visible:ring-amber-400 focus-visible:border-amber-400 transition-all"
+          />
+          {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
+        </div>
+
+        {/* Sign In CTA */}
+        <div className="pt-1">
+          <Button
+            type="submit"
+            disabled={isLoading || isWalletLoading}
+            className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm rounded-xl border-0 transition-colors"
+          >
+            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            Sign In
+          </Button>
+        </div>
+      </form>
+
+      {/* Divider */}
+      <div className="flex items-center gap-4 my-6">
+        <div className="flex-1 h-px bg-slate-100" />
+        <span className="text-xs text-slate-400 font-medium">or</span>
+        <div className="flex-1 h-px bg-slate-100" />
+      </div>
+
+      {/* Wallet button */}
+      <Button
+        type="button"
+        onClick={() => setWalletModalOpen(true)}
+        disabled={isLoading || isWalletLoading}
+        className="w-full h-12 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium text-sm rounded-xl transition-colors"
+      >
+        {isWalletLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+        Connect Freighter Wallet
+      </Button>
+    </div>
   );
 }
+

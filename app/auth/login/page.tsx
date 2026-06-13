@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
+
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
@@ -144,12 +144,7 @@ export default function LoginPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="w-full"
-    >
+    <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} onConnected={onWalletConnected} />
 
       <Card className="rounded-2xl overflow-hidden bg-card border border-border shadow-2xl">
@@ -228,6 +223,6 @@ export default function LoginPage() {
             </CardFooter>
           </form>
       </Card>
-    </motion.div>
+    </div>
   );
 }

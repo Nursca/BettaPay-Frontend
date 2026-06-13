@@ -147,30 +147,32 @@ export default function LoginPage() {
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} onConnected={onWalletConnected} />
 
-      <Card className="rounded-2xl overflow-hidden bg-card border border-border shadow-2xl">
-        <CardHeader className="space-y-2 text-center pb-8 pt-8">
-            <CardTitle className="text-3xl font-bold tracking-tight text-foreground">Welcome back</CardTitle>
-            <CardDescription className="text-muted-foreground text-base">
-              Sign in to manage your payments
-            </CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <CardContent className="space-y-5 px-8">
-              <div className="space-y-2.5">
-                <Label htmlFor="email" className="text-muted-foreground">Email Address</Label>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Welcome back</h1>
+        <p className="text-slate-500 mt-2 text-base">Sign in to manage your payments</p>
+      </div>
+
+      <Card className="rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <CardHeader className="px-8 pt-8 pb-0">
+          <div />
+        </CardHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-5 px-8 pt-6">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-slate-700 font-medium text-sm">Email Address</Label>
                 <Input 
                   id="email" 
                   type="email" 
                   placeholder="name@company.com" 
                   {...register('email')} 
-                  className="bg-input h-12 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
+                  className="bg-slate-50 h-11 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-amber-400/50 focus-visible:border-amber-400 transition-all rounded-lg"
                 />
-                {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
+                {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
               </div>
-              <div className="space-y-2.5">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-muted-foreground">Password</Label>
-                  <Link href="#" className="text-sm text-brand-accent hover:opacity-90 transition-colors">
+                  <Label htmlFor="password" className="text-slate-700 font-medium text-sm">Password</Label>
+                  <Link href="#" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
                     Forgot password?
                   </Link>
                 </div>
@@ -179,49 +181,49 @@ export default function LoginPage() {
                   type="password" 
                   placeholder="••••••••"
                   {...register('password')} 
-                  className="bg-input h-12 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
+                  className="bg-slate-50 h-11 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-amber-400/50 focus-visible:border-amber-400 transition-all rounded-lg"
                 />
-                {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
+                {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
               </div>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-6 pb-8 pt-4 px-8">
-              <Button 
-                type="submit" 
-                className="w-full h-12 text-base font-medium bg-primary text-white hover:bg-primary/90 shadow-[0_0_20px_rgba(240,165,0,0.3)] transition-all hover:shadow-[0_0_25px_rgba(240,165,0,0.5)]" 
-                disabled={isLoading || isWalletLoading}
-              >
-                {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                Sign In
-              </Button>
-              
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-white/10" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4 pb-8 pt-4 px-8">
+            <Button 
+              type="submit" 
+              className="w-full h-11 text-base font-semibold bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20 transition-all rounded-lg" 
+              disabled={isLoading || isWalletLoading}
+            >
+              {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+              Sign In
+            </Button>
+            
+            <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-slate-200" />
               </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-3 text-slate-400 font-medium tracking-wider">Or continue with</span>
+              </div>
+            </div>
 
-              <Button 
-                type="button" 
-                variant="outline"
-                className="w-full h-12 text-base font-medium bg-input border-border text-foreground hover:opacity-90 transition-all"
-                onClick={() => setWalletModalOpen(true)}
-                disabled={isLoading || isWalletLoading}
-              >
-                {isWalletLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                Freighter Wallet
-              </Button>
+            <Button 
+              type="button" 
+              variant="outline"
+              className="w-full h-11 text-base font-medium bg-white border-slate-200 text-slate-700 hover:bg-slate-50 transition-all rounded-lg"
+              onClick={() => setWalletModalOpen(true)}
+              disabled={isLoading || isWalletLoading}
+            >
+              {isWalletLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+              Freighter Wallet
+            </Button>
 
-              <div className="text-sm text-center text-muted-foreground">
-                Don&apos;t have an account?{' '}
-                <Link href="/auth/register" className="text-brand-accent hover:opacity-90 transition-colors font-medium">
-                  Create one now
-                </Link>
-              </div>
-            </CardFooter>
-          </form>
+            <p className="text-sm text-center text-slate-500">
+              Don&apos;t have an account?{' '}
+              <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 transition-colors font-semibold">
+                Create one now
+              </Link>
+            </p>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );

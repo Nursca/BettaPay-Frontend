@@ -1,4 +1,5 @@
 import { ShieldCheck } from 'lucide-react';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,6 +10,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="absolute top-8 left-8 lg:hidden flex items-center gap-2">
           <ShieldCheck className="w-6 h-6 text-brand-accent" />
           <span className="font-bold text-brand-text-primary">BettaPay</span>
+        </div>
+
+        {/* Theme toggle (mobile & desktop) */}
+        <div className="absolute top-6 right-6">
+          <ThemeToggle />
         </div>
         
         {/* Content Wrapper */}

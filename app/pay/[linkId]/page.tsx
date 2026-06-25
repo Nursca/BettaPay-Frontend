@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -8,12 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useWalletStore } from '@/lib/store/walletStore';
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay';
-import { ShieldCheck, ArrowRight, QrCode } from 'lucide-react';
+import { ArrowRight, QrCode } from 'lucide-react';
 import { toast } from 'sonner';
 import { Contract, rpc, TransactionBuilder, Networks, nativeToScVal } from '@stellar/stellar-sdk';
 import { signWithFreighter } from '@/lib/stellar/freighter';
 import { apiClient } from '@/lib/api/axios';
-import dynamic from 'next/dynamic';
+import { WalletModalFallback } from '@/components/wallet/WalletModalFallback';
 const WalletModal = dynamic(() => import('@/components/wallet/WalletModal').then(m => m.WalletModal), { ssr: false });
 
 export default function PaymentLinkPage() {
@@ -113,7 +113,9 @@ export default function PaymentLinkPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md"> 
-        <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} />
+        <Suspense fallback={<WalletModalFallback open={walletModalOpen} onOpenChange={setWalletModalOpen} />}>
+          <WalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} />
+        </Suspense>
         
         {/* Merchant Branding Header */}
         <div className="flex flex-col items-center mb-8">

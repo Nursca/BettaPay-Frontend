@@ -1,4 +1,4 @@
-import { ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 const highlights = [
   'Non-custodial — you always control your funds',

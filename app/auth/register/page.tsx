@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import dynamic from 'next/dynamic';
+import { WalletModalFallback } from '@/components/wallet/WalletModalFallback';
 const WalletModal = dynamic(() => import('@/components/wallet/WalletModal').then(m => m.WalletModal), { ssr: false });
 
 export default function RegisterPage() {
@@ -83,7 +84,9 @@ export default function RegisterPage() {
   return (
     <div className="w-full">
       <Header />
-      <WalletModal open={walletOpen} onOpenChange={setWalletOpen} />
+      <Suspense fallback={<WalletModalFallback open={walletOpen} onOpenChange={setWalletOpen} />}>
+        <WalletModal open={walletOpen} onOpenChange={setWalletOpen} />
+      </Suspense>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

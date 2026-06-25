@@ -12,10 +12,13 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { mockTransactions } from '@/lib/mock/transactions';
 import { formatDate } from '@/lib/utils/format';
 import { Search, Download, Filter, SearchX } from 'lucide-react';
+import { TransactionDetail } from '@/components/transactions/TransactionDetail';
+import { Transaction } from '@/lib/mock/transactions';
 
 export default function TransactionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCount] = useState(0);
+  const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
 
   const filteredTransactions = mockTransactions.filter(tx =>
     tx.txHash.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 import { toast } from 'sonner';
+import { getCsrfTokenFromCookie, CSRF_HEADER_NAME } from '../utils/csrf';
 
 // Use cookie-based auth (HttpOnly cookie set by the server). Do not read tokens from localStorage.
 export const apiClient = axios.create({
@@ -12,8 +13,19 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-// No Authorization header injection from client-side stored tokens. Server should set/validate cookie.
-apiClient.interceptors.request.use((config) => config);
+// Attach CSRF token to all state-changing requests (double-submit cookie pattern)
+const STATE_METHODS = ['post', 'put', 'patch', 'delete'] as const;
+
+apiClient.interceptors.request.use((config) => {
+  const method = (config.method || '').toLowerCase();
+  if (STATE_METHODS.includes(method as (typeof STATE_METHODS)[number])) {
+    const csrfToken = getCsrfTokenFromCookie();
+    if (csrfToken) {
+      config.headers.set(CSRF_HEADER_NAME, csrfToken);
+    }
+  }
+  return config;
+});
 
 apiClient.interceptors.response.use(
   (response) => response,

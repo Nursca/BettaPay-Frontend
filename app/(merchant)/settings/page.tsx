@@ -9,7 +9,7 @@ import { Toggle } from '@/components/ui/toggle';
 import { Settings, User, Building2, Bell, Shield, LogOut } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useNotify } from '@/lib/hooks/useNotify';
 import { cn } from '@/lib/utils';
 
 const tabs = [
@@ -35,11 +35,11 @@ export default function SettingsPage() {
     fxRateChanges: true,
   });
   const { user, logout } = useAuthStore();
-  const router = useRouter();
+  const notify = useNotify();
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
+    notify.success('Logged out successfully');
     router.push('/auth/login');
   };
 
@@ -121,7 +121,7 @@ export default function SettingsPage() {
                   <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Phone Number</Label>
                   <Input placeholder="+234 800 000 0000" className="h-10 border-slate-200 rounded-xl bg-white text-sm" />
                 </div>
-                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl h-10 px-6 text-sm" onClick={() => toast.success('Profile updated')}>
+                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl h-10 px-6 text-sm" onClick={() => notify.success('Profile updated');}>
                   Save Changes
                 </Button>
               </CardContent>
@@ -152,7 +152,7 @@ export default function SettingsPage() {
                     <Input placeholder="0123456789" className="h-10 border-slate-200 rounded-xl bg-white text-sm" />
                   </div>
                 </div>
-                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl h-10 px-6 text-sm" onClick={() => toast.success('Business info saved')}>
+                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl h-10 px-6 text-sm" onClick={() => notify.success('Business info saved');}>
                   Save Changes
                 </Button>
               </CardContent>
@@ -200,7 +200,7 @@ export default function SettingsPage() {
                   <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Confirm New Password</Label>
                   <Input type="password" placeholder="••••••••" className="h-10 border-slate-200 rounded-xl bg-white text-sm" />
                 </div>
-                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl h-10 px-6 text-sm" onClick={() => toast.success('Password updated')}>
+                <Button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl h-10 px-6 text-sm" onClick={() => notify.success('Password updated');}>
                   Update Password
                 </Button>
               </CardContent>

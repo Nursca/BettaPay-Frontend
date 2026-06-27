@@ -48,6 +48,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title }: TopbarProps) => {
           className="md:hidden text-slate-400 hover:text-slate-700"
           onClick={onMenuClick}
           aria-expanded={isMenuOpen}
+          aria-label="Toggle mobile menu"
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -67,7 +68,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title }: TopbarProps) => {
         </div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl h-9 w-9">
+        <Button variant="ghost" size="icon" aria-label="View notifications" className="relative text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl h-9 w-9">
           <Bell className="h-4.5 w-4.5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border-2 border-white"></span>
         </Button>
@@ -79,6 +80,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title }: TopbarProps) => {
               variant="ghost" 
               className="relative h-9 w-9 rounded-xl p-0 hover:bg-slate-100"
               aria-expanded={isDropdownOpen}
+              aria-label="User menu"
             >
               <Avatar className="h-8 w-8 border border-slate-200">
                 <AvatarImage src="/avatars/01.png" alt={user?.name ?? 'User'} />

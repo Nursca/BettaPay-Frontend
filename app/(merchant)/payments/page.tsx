@@ -47,7 +47,7 @@ export default function PaymentsPage() {
 
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger render={
-            <Button className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto" aria-expanded={isCreateOpen}>
               <Plus className="w-4 h-4 mr-2" />
               New Payment Link
             </Button>

@@ -79,7 +79,7 @@ export default function WalletPage() {
       </div>
 
       {/* Wallet Card */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-6 text-white shadow-xl">
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-4 sm:p-6 text-white shadow-xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full -ml-16 -mb-16 blur-3xl pointer-events-none" />
 
@@ -108,10 +108,10 @@ export default function WalletPage() {
             </p>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs text-white/50 mb-1">Wallet Address</p>
-              <p className="font-mono text-sm text-white/80">{shortAddress}</p>
+              <p className="font-mono text-xs sm:text-sm text-white/80 break-all">{shortAddress}</p>
             </div>
             <div className="flex items-center gap-2">
               <Button

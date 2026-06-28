@@ -79,7 +79,7 @@ export default function TransactionsPage() {
 
       <Card className="bg-brand-surface border-border/50 shadow-sm">
         <CardContent className="pt-4">
-          <div className="rounded-md border border-border/50 overflow-hidden">
+          <div className="rounded-md border border-border/50 overflow-x-auto hidden md:block">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow className="border-border/50 hover:bg-transparent">
@@ -145,6 +145,60 @@ export default function TransactionsPage() {
                 )}
               </TableBody>
             </Table>
+          </div>
+
+          <div className="md:hidden space-y-3">
+            {filteredTransactions.length === 0 ? (
+              <EmptyState
+                icon={SearchX}
+                title={searchTerm ? 'No transactions match your search' : 'No transactions found'}
+                description={
+                  searchTerm
+                    ? 'Try adjusting your search terms or clearing filters.'
+                    : 'Transactions will appear here once payments are received.'
+                }
+                action={
+                  searchTerm
+                    ? { label: 'Clear search', onClick: () => setSearchTerm('') }
+                    : undefined
+                }
+              />
+            ) : (
+              filteredTransactions.map((tx) => (
+                <div
+                  key={tx.id}
+                  className="border border-border/50 rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/30 transition-colors"
+                  onClick={() => setSelectedTx(tx)}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">{formatDate(tx.timestamp)}</span>
+                    <StatusBadge status={tx.status} />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Payer</span>
+                      <CopyAddress address={tx.payerAddress} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Tx Hash</span>
+                      <CopyAddress address={tx.txHash} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Source</span>
+                      <span className="text-sm text-muted-foreground">{tx.source}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Amount (USDC)</span>
+                      <CurrencyDisplay amount={tx.amountUsdc} currency="USDC" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Amount (NGN)</span>
+                      <CurrencyDisplay amount={tx.amountNgn} currency="NGN" showDecimals={false} />
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>

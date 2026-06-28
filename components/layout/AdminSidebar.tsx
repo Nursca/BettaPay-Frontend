@@ -14,7 +14,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
-const navItems = [
+export const adminNavItems = [
   { href: '/overview', label: 'Platform Overview', icon: BarChart3 },
   { href: '/merchants', label: 'Merchants', icon: Users },
   { href: '/admin/transactions', label: 'Transactions', icon: ListOrdered },
@@ -39,7 +39,7 @@ export const AdminSidebar = () => {
       </div>
 
       <nav className="flex-1 px-4 py-4 space-y-1">
-        {navItems.map((item) => {
+        {adminNavItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           const Icon = item.icon;
           

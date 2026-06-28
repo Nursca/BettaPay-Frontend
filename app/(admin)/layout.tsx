@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { AdminSidebar } from '@/components/layout/AdminSidebar';
+import { AdminSidebar, adminNavItems } from '@/components/layout/AdminSidebar';
+import { MobileNavDrawer } from '@/components/layout/MobileNavDrawer';
 import { Topbar } from '@/components/layout/Topbar';
 import Footer from '@/components/layout/Footer';
+import { ShieldCheck } from 'lucide-react';
 
 export default function AdminLayout({
   children,
@@ -15,7 +17,18 @@ export default function AdminLayout({
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       <AdminSidebar />
-      {/* Mobile nav drawer would go here */}
+      <MobileNavDrawer
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        navItems={adminNavItems}
+        brandLabel="BettaPay ADMIN"
+        logo={
+          <span className="font-bold text-xl tracking-tight text-sidebar-foreground flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-primary" />
+            BettaPay <span className="text-primary text-sm font-normal ml-0.5">ADMIN</span>
+          </span>
+        }
+      />
       
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Topbar onMenuClick={() => setMobileMenuOpen(!mobileMenuOpen)} isMenuOpen={mobileMenuOpen} title="Platform Operations" />

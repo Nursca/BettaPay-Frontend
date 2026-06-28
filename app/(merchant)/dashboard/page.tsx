@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay';
@@ -93,6 +93,15 @@ export default function DashboardPage() {
   const { user } = useAuthStore();
   const [activePeriod, setActivePeriod] = useState<Period>('7D');
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   // Error simulation states
   const [simulationEnabled, setSimulationEnabled] = useState(false);
@@ -268,7 +277,7 @@ export default function DashboardPage() {
                     key={p}
                     onClick={() => setActivePeriod(p)}
                     className={cn(
-                      'px-3 py-1 rounded-md text-xs font-semibold transition-all',
+                      'min-h-[44px] min-w-[44px] px-3 py-1 rounded-md text-xs font-semibold transition-all',
                       activePeriod === p
                         ? 'bg-white text-slate-900 shadow-sm'
                         : 'text-slate-400 hover:text-slate-600'
@@ -291,7 +300,7 @@ export default function DashboardPage() {
             ) : (
               <div className="h-[260px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={mockChartData} margin={{ top: 4, right: 4, bottom: 0, left: -16 }}>
+                  <AreaChart data={mockChartData} margin={{ top: 4, right: 4, bottom: 0, left: isMobile ? 0 : -16 }}>
                     <defs>
                       <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#F0A500" stopOpacity={0.25} />
@@ -354,7 +363,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold text-slate-900">Recent Activity</CardTitle>
               <Link href="/transactions">
-                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 h-7 px-2 rounded-lg font-semibold">
+                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 min-h-[44px] px-2 rounded-lg font-semibold">
                   View all <ChevronRight className="w-3 h-3 ml-0.5" />
                 </Button>
               </Link>
@@ -443,7 +452,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold text-slate-900">Payment Link Performance</CardTitle>
               <Link href="/payments">
-                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 h-7 px-2 rounded-lg font-semibold">
+                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 min-h-[44px] px-2 rounded-lg font-semibold">
                   Manage <ArrowRight className="w-3 h-3 ml-0.5" />
                 </Button>
               </Link>
@@ -485,11 +494,11 @@ export default function DashboardPage() {
                         <span className="text-xs text-slate-400">{link.clicks} clicks</span>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" aria-label="Copy payment link" className="h-7 w-7 rounded-lg" onClick={() => handleCopy(`https://${link.url}`)}>
+                        <Button variant="ghost" size="icon" aria-label="Copy payment link" className="min-h-[44px] min-w-[44px] rounded-lg" onClick={() => handleCopy(`https://${link.url}`)}>
                           <Copy className="w-3 h-3 text-slate-400" />
                         </Button>
                         <Link href={`https://${link.url}`} target="_blank">
-                          <Button variant="ghost" size="icon" aria-label="Open payment link" className="h-7 w-7 rounded-lg">
+                          <Button variant="ghost" size="icon" aria-label="Open payment link" className="min-h-[44px] min-w-[44px] rounded-lg">
                             <ExternalLink className="w-3 h-3 text-slate-400" />
                           </Button>
                         </Link>

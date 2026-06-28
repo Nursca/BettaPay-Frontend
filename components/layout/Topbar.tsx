@@ -49,7 +49,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title }: TopbarProps) => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="md:hidden text-slate-400 hover:text-slate-700"
+          className="md:hidden text-slate-400 hover:text-slate-700 min-h-[44px] min-w-[44px]"
           onClick={onMenuClick}
           aria-expanded={isMenuOpen}
           aria-label="Toggle mobile menu"
@@ -72,7 +72,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title }: TopbarProps) => {
         </div>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" aria-label="View notifications" className="relative text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl h-9 w-9">
+        <Button variant="ghost" size="icon" aria-label="View notifications" className="relative text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl min-h-[44px] min-w-[44px]">
           <Bell className="h-4.5 w-4.5" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border-2 border-white"></span>
         </Button>
@@ -82,7 +82,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title }: TopbarProps) => {
           <DropdownMenuTrigger render={
             <Button 
               variant="ghost" 
-              className="relative h-9 w-9 rounded-xl p-0 hover:bg-slate-100"
+              className="relative min-h-[44px] min-w-[44px] rounded-xl p-0 hover:bg-slate-100"
               aria-expanded={isDropdownOpen}
               aria-label="User menu"
             >

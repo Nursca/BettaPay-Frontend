@@ -44,7 +44,7 @@ export const CopyAddress = ({
       <Button 
         variant="ghost" 
         size="icon" 
-        className={cn('h-8 w-8 text-muted-foreground hover:text-foreground', className)}
+        className={cn('min-h-[44px] min-w-[44px] text-muted-foreground hover:text-foreground', className)}
         onClick={handleCopy}
         title="Copy address"
         aria-label={`Copy address ${displayAddress}`}

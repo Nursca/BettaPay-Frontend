@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw, TrendingUp, TrendingDown, Info, Bell, BellRing, Trash2, Plus, ArrowRight, X } from 'lucide-react';
@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from '@/components/ui/input';
-import { useEffect } from 'react';
 
 const fxHistory = [
   { date: 'Jan 7', rate: 1480 },
@@ -57,7 +56,16 @@ interface RateAlert {
 export default function FxRatesPage() {
   const [lastRefresh] = useState('Just now');
   const [alerts, setAlerts] = useState<RateAlert[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
   const notify = useNotify();
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
   const [newPair, setNewPair] = useState('USDC/NGN');
   const [newCondition, setNewCondition] = useState<'above' | 'below'>('above');
   const [newTarget, setNewTarget] = useState('');
@@ -178,7 +186,7 @@ export default function FxRatesPage() {
           <CardContent>
             <div className="h-[240px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={fxHistory} margin={{ top: 4, right: 4, bottom: 0, left: -10 }}>
+                <LineChart data={fxHistory} margin={{ top: 4, right: 4, bottom: 0, left: isMobile ? 0 : -10 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
                   <XAxis dataKey="date" fontSize={11} tickLine={false} axisLine={false} tick={{ fill: '#94A3B8' }} />
                   <YAxis fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `₦${v}`} tick={{ fill: '#94A3B8' }} domain={['auto', 'auto']} />
@@ -320,7 +328,7 @@ export default function FxRatesPage() {
                         size="icon" 
                         aria-label={alert.enabled ? "Disable alert" : "Enable alert"}
                         className={cn(
-                          "h-8 w-8 rounded-lg",
+                          "min-h-[44px] min-w-[44px] rounded-lg",
                           alert.enabled ? "text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50" : "text-slate-400 hover:text-slate-600 hover:bg-slate-200"
                         )}
                         onClick={() => toggleAlert(alert.id)}
@@ -331,7 +339,7 @@ export default function FxRatesPage() {
                         variant="ghost" 
                         size="icon" 
                         aria-label="Delete alert"
-                        className="h-8 w-8 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50"
+                        className="min-h-[44px] min-w-[44px] rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50"
                         onClick={() => deleteAlert(alert.id)}
                       >
                         <Trash2 className="w-3.5 h-3.5" />

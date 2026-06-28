@@ -1,4 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 
 const highlights = [
   "Non-custodial — you always control your funds",
@@ -18,9 +19,12 @@ export default function AuthLayout({
       <div className="w-full lg:w-[52%] flex flex-col bg-white">
         {/* Top bar */}
         <div className="flex items-center justify-center lg:justify-start gap-2.5 px-4 sm:px-8 py-6 border-b border-slate-100">
-          <img
+          <Image
             src="/logo.png"
             alt="BettaPay - Return to homepage"
+            width={32}
+            height={32}
+            priority={true}
             className="w-8 h-8 rounded-lg object-contain"
           />
           <span className="font-bold text-slate-900 text-lg tracking-tight">
@@ -54,9 +58,12 @@ export default function AuthLayout({
         <div className="p-16 max-w-lg w-full">
           {/* Icon + brand */}
           <div className="flex items-center gap-3 mb-14">
-            <img
+            <Image
               src="/logo.png"
               alt=""
+              width={44}
+              height={44}
+              priority={true}
               className="w-11 h-11 rounded-xl object-contain bg-slate-800"
             />
             <span className="text-xl font-bold text-white tracking-tight">

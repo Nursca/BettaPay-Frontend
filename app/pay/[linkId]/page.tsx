@@ -16,6 +16,7 @@ import { useWalletStore } from "@/lib/store/walletStore";
 import { CurrencyDisplay } from "@/components/shared/CurrencyDisplay";
 import { ArrowRight, QrCode } from "lucide-react";
 import { useNotify } from "@/lib/hooks/useNotify";
+import Image from "next/image";
 import {
   Contract,
   rpc,
@@ -156,9 +157,12 @@ export default function PaymentLinkPage() {
         {/* Merchant Branding Header */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 rounded-full bg-slate-900 flex items-center justify-center mb-4 overflow-hidden">
-            <img
+            <Image
               src="/logo.png"
               alt={`${linkData.merchantName} logo`}
+              width={64}
+              height={64}
+              priority={true}
               className="w-full h-full object-cover"
             />
           </div>
@@ -313,9 +317,11 @@ export default function PaymentLinkPage() {
 
         <div className="mt-8 flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
           Powered by{" "}
-          <img
+          <Image
             src="/logo.png"
             alt=""
+            width={16}
+            height={16}
             className="w-4 h-4 object-contain rounded"
           />{" "}
           <span className="font-semibold text-foreground">BettaPay</span>

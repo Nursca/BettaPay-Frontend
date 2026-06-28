@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,83 @@ import { Search, Download, Filter, SearchX } from 'lucide-react';
 import { TransactionDetail } from '@/components/transactions/TransactionDetail';
 import { Transaction } from '@/lib/mock/transactions';
 import { useOfflineStore } from '@/lib/store/offlineStore';
+
+interface TransactionRowProps {
+  tx: Transaction;
+  onClick: (tx: Transaction) => void;
+}
+
+const TransactionRow = memo(function TransactionRow({ tx, onClick }: TransactionRowProps) {
+  return (
+    <TableRow
+      className="border-border/50 hover:bg-muted/30 cursor-pointer"
+      onClick={() => onClick(tx)}
+    >
+      <TableCell className="text-muted-foreground whitespace-nowrap">
+        {formatDate(tx.timestamp)}
+      </TableCell>
+      <TableCell>
+        <CopyAddress address={tx.payerAddress} />
+      </TableCell>
+      <TableCell>
+        <CopyAddress address={tx.txHash} />
+      </TableCell>
+      <TableCell className="text-muted-foreground">
+        {tx.source}
+      </TableCell>
+      <TableCell className="text-right font-medium">
+        <CurrencyDisplay amount={tx.amountUsdc} currency="USDC" />
+      </TableCell>
+      <TableCell className="text-right text-muted-foreground">
+        <CurrencyDisplay amount={tx.amountNgn} currency="NGN" showDecimals={false} />
+      </TableCell>
+      <TableCell className="text-center">
+        <StatusBadge status={tx.status} />
+      </TableCell>
+    </TableRow>
+  );
+});
+
+interface TransactionCardProps {
+  tx: Transaction;
+  onClick: (tx: Transaction) => void;
+}
+
+const TransactionCard = memo(function TransactionCard({ tx, onClick }: TransactionCardProps) {
+  return (
+    <div
+      className="border border-border/50 rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/30 transition-colors"
+      onClick={() => onClick(tx)}
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-muted-foreground">{formatDate(tx.timestamp)}</span>
+        <StatusBadge status={tx.status} />
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">Payer</span>
+          <CopyAddress address={tx.payerAddress} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">Tx Hash</span>
+          <CopyAddress address={tx.txHash} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">Source</span>
+          <span className="text-sm text-muted-foreground">{tx.source}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">Amount (USDC)</span>
+          <CurrencyDisplay amount={tx.amountUsdc} currency="USDC" />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">Amount (NGN)</span>
+          <CurrencyDisplay amount={tx.amountNgn} currency="NGN" showDecimals={false} />
+        </div>
+      </div>
+    </div>
+  );
+});
 
 export default function TransactionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -114,33 +191,11 @@ export default function TransactionsPage() {
                   </TableRow>
                 ) : (
                   filteredTransactions.map((tx) => (
-                    <TableRow 
-                      key={tx.id} 
-                      className="border-border/50 hover:bg-muted/30 cursor-pointer"
-                      onClick={() => setSelectedTx(tx)}
-                    >
-                      <TableCell className="text-muted-foreground whitespace-nowrap">
-                        {formatDate(tx.timestamp)}
-                      </TableCell>
-                      <TableCell>
-                        <CopyAddress address={tx.payerAddress} />
-                      </TableCell>
-                      <TableCell>
-                        <CopyAddress address={tx.txHash} />
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {tx.source}
-                      </TableCell>
-                      <TableCell className="text-right font-medium">
-                        <CurrencyDisplay amount={tx.amountUsdc} currency="USDC" />
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground">
-                        <CurrencyDisplay amount={tx.amountNgn} currency="NGN" showDecimals={false} />
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <StatusBadge status={tx.status} />
-                      </TableCell>
-                    </TableRow>
+                    <TransactionRow
+                      key={tx.id}
+                      tx={tx}
+                      onClick={setSelectedTx}
+                    />
                   ))
                 )}
               </TableBody>
@@ -165,38 +220,11 @@ export default function TransactionsPage() {
               />
             ) : (
               filteredTransactions.map((tx) => (
-                <div
+                <TransactionCard
                   key={tx.id}
-                  className="border border-border/50 rounded-lg p-4 space-y-3 cursor-pointer hover:bg-muted/30 transition-colors"
-                  onClick={() => setSelectedTx(tx)}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">{formatDate(tx.timestamp)}</span>
-                    <StatusBadge status={tx.status} />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Payer</span>
-                      <CopyAddress address={tx.payerAddress} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Tx Hash</span>
-                      <CopyAddress address={tx.txHash} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Source</span>
-                      <span className="text-sm text-muted-foreground">{tx.source}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Amount (USDC)</span>
-                      <CurrencyDisplay amount={tx.amountUsdc} currency="USDC" />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Amount (NGN)</span>
-                      <CurrencyDisplay amount={tx.amountNgn} currency="NGN" showDecimals={false} />
-                    </div>
-                  </div>
-                </div>
+                  tx={tx}
+                  onClick={setSelectedTx}
+                />
               ))
             )}
           </div>

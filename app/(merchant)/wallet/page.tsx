@@ -22,6 +22,45 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { useNotify } from "@/lib/hooks/useNotify";
 import { useAuthStore } from "@/lib/store/authStore";
 import Image from "next/image";
+import { memo } from "react";
+
+interface WalletTx {
+  id: string;
+  type: "receive" | "send";
+  label: string;
+  amount: number;
+  time: string;
+}
+
+const WalletActivityItem = memo(function WalletActivityItem({ tx }: { tx: WalletTx }) {
+  return (
+    <div
+      className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-slate-50 transition-colors"
+    >
+      <div
+        className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${tx.type === "receive" ? "bg-emerald-100" : "bg-amber-100"}`}
+      >
+        {tx.type === "receive" ? (
+          <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
+        ) : (
+          <ArrowUpRight className="w-4 h-4 text-amber-600" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-slate-800">
+          {tx.label}
+        </p>
+        <p className="text-xs text-slate-400">{tx.time}</p>
+      </div>
+      <span
+        className={`text-sm font-semibold ${tx.type === "receive" ? "text-emerald-600" : "text-slate-700"}`}
+      >
+        {tx.type === "receive" ? "+" : "-"}
+        {tx.amount.toFixed(2)} USDC
+      </span>
+    </div>
+  );
+});
 
 const mockTxHistory = [
   {
@@ -206,32 +245,7 @@ export default function WalletPage() {
           ) : (
             <div className="space-y-2">
               {mockTxHistory.map((tx) => (
-                <div
-                  key={tx.id}
-                  className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-slate-50 transition-colors"
-                >
-                  <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${tx.type === "receive" ? "bg-emerald-100" : "bg-amber-100"}`}
-                  >
-                    {tx.type === "receive" ? (
-                      <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
-                    ) : (
-                      <ArrowUpRight className="w-4 h-4 text-amber-600" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-800">
-                      {tx.label}
-                    </p>
-                    <p className="text-xs text-slate-400">{tx.time}</p>
-                  </div>
-                  <span
-                    className={`text-sm font-semibold ${tx.type === "receive" ? "text-emerald-600" : "text-slate-700"}`}
-                  >
-                    {tx.type === "receive" ? "+" : "-"}
-                    {tx.amount.toFixed(2)} USDC
-                  </span>
-                </div>
+                <WalletActivityItem key={tx.id} tx={tx} />
               ))}
             </div>
           )}

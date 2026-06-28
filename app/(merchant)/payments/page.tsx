@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +19,54 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNotify } from '@/lib/hooks/useNotify';
+
+interface PaymentLink {
+  id: string;
+  label: string;
+  type: 'open' | 'fixed';
+  amount: number | null;
+  currency: string;
+  url: string;
+  created: string;
+}
+
+interface PaymentLinkCardProps {
+  link: PaymentLink;
+}
+
+const PaymentLinkCard = memo(function PaymentLinkCard({ link }: PaymentLinkCardProps) {
+  return (
+    <Card className="bg-brand-surface border-border/50 shadow-sm hover:border-brand-accent/50 transition-colors group">
+      <CardHeader className="flex flex-row items-start justify-between pb-2">
+        <div>
+          <CardTitle className="text-base font-medium text-brand-text-primary line-clamp-1">{link.label}</CardTitle>
+          <CardDescription className="mt-1">
+            {link.type === 'fixed' ? `${link.amount} ${link.currency}` : 'Open amount'}
+            <span className="hidden sm:inline"> · Created {link.created}</span>
+          </CardDescription>
+        </div>
+        <Button variant="ghost" size="icon" aria-label="More options" className="h-8 w-8 text-muted-foreground -mt-2 -mr-2">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col gap-2 mt-4 sm:flex-row sm:items-center">
+          <div className="flex-1 overflow-hidden min-w-0">
+            <div className="text-xs text-muted-foreground truncate max-w-[180px] sm:max-w-full bg-muted/50 p-2 rounded border border-border/50 font-mono">
+              {link.url}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <CopyAddress address={link.url} showIconOnly truncate={false} />
+            <Button variant="outline" size="icon" aria-label="Show QR code" className="h-8 w-8 border-border/50 bg-background/50 text-muted-foreground hover:text-brand-text-primary">
+              <QrCode className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+});
 
 export default function PaymentsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -126,35 +174,7 @@ export default function PaymentsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {mockLinks.map((link) => (
-            <Card key={link.id} className="bg-brand-surface border-border/50 shadow-sm hover:border-brand-accent/50 transition-colors group">
-              <CardHeader className="flex flex-row items-start justify-between pb-2">
-                <div>
-                  <CardTitle className="text-base font-medium text-brand-text-primary line-clamp-1">{link.label}</CardTitle>
-                  <CardDescription className="mt-1">
-                    {link.type === 'fixed' ? `${link.amount} ${link.currency}` : 'Open amount'}
-                    <span className="hidden sm:inline"> · Created {link.created}</span>
-                  </CardDescription>
-                </div>
-                <Button variant="ghost" size="icon" aria-label="More options" className="h-8 w-8 text-muted-foreground -mt-2 -mr-2">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-2 mt-4 sm:flex-row sm:items-center">
-                  <div className="flex-1 overflow-hidden min-w-0">
-                    <div className="text-xs text-muted-foreground truncate max-w-[180px] sm:max-w-full bg-muted/50 p-2 rounded border border-border/50 font-mono">
-                      {link.url}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <CopyAddress address={link.url} showIconOnly truncate={false} />
-                    <Button variant="outline" size="icon" aria-label="Show QR code" className="h-8 w-8 border-border/50 bg-background/50 text-muted-foreground hover:text-brand-text-primary">
-                      <QrCode className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <PaymentLinkCard key={link.id} link={link} />
           ))}
         </div>
       )}

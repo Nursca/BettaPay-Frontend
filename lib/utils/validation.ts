@@ -1,8 +1,35 @@
 import { z } from 'zod';
 
+const passwordRequirements = [
+  { label: 'At least 8 characters', regex: /.{8,}/ },
+  { label: 'One uppercase letter', regex: /[A-Z]/ },
+  { label: 'One lowercase letter', regex: /[a-z]/ },
+  { label: 'One digit', regex: /[0-9]/ },
+  { label: 'One special character (!@#$%^&*)', regex: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/ },
+] as const;
+
+export type PasswordRequirement = typeof passwordRequirements[number];
+export { passwordRequirements };
+
+function validatePassword(password: string): string[] {
+  return passwordRequirements
+    .filter(({ regex }) => !regex.test(password))
+    .map(({ label }) => label);
+}
+
+const strongPasswordSchema = z.string().superRefine((password, ctx) => {
+  const unmet = validatePassword(password);
+  if (unmet.length > 0) {
+    ctx.addIssue({
+      code: 'custom' as const,
+      message: `Password must include: ${unmet.join(', ')}`,
+    });
+  }
+});
+
 export const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: strongPasswordSchema,
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
@@ -10,7 +37,7 @@ export type LoginFormValues = z.infer<typeof loginSchema>;
 export const registerSchema = z.object({
   businessName: z.string().min(2, 'Business name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: strongPasswordSchema,
   country: z.string({ error: 'Country is required' }).min(1, 'Country is required'),
 });
 

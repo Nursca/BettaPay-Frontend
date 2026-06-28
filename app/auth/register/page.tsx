@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Check } from 'lucide-react';
 import { useNotify } from '@/lib/hooks/useNotify';
 
-import { registerSchema, RegisterFormValues } from '@/lib/utils/validation';
+import { registerSchema, RegisterFormValues, passwordRequirements } from '@/lib/utils/validation';
 import { useWalletStore } from '@/lib/store/walletStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,10 +34,24 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
   });
+
+  const passwordValue = watch('password') ?? '';
+  const metRequirements = passwordRequirements.map(({ regex, label }) => ({
+    label,
+    met: regex.test(passwordValue),
+  }));
+  const strengthScore = metRequirements.filter((r) => r.met).length;
+  const strengthPercent = (strengthScore / passwordRequirements.length) * 100;
+  const strengthColor =
+    strengthScore <= 1 ? 'bg-red-500' :
+    strengthScore <= 2 ? 'bg-orange-500' :
+    strengthScore <= 3 ? 'bg-yellow-500' :
+    strengthScore <= 4 ? 'bg-blue-500' : 'bg-green-500';
 
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
@@ -152,22 +166,45 @@ export default function RegisterPage() {
 
               <div className="space-y-2.5">
                 <Label htmlFor="password" className="text-brand-text-muted">Password</Label>
-                <Input 
-                  id="password" 
+                <Input
+                  id="password"
                   type="password"
-                  placeholder="••••••••" 
-                  {...register('password')} 
+                  placeholder="••••••••"
+                  {...register('password')}
                   aria-invalid={errors.password ? "true" : "false"}
-                  aria-describedby={errors.password ? "password-error" : undefined}
+                  aria-describedby={errors.password ? "password-error" : passwordValue.length > 0 ? "password-requirements" : undefined}
                   className="bg-input h-12 border-border text-brand-text-primary placeholder:text-brand-text-muted focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary transition-all"
                 />
-                {errors.password && <p id="password-error" className="text-sm text-red-400">{errors.password.message}</p>}
+                {passwordValue.length > 0 && (
+                  <div className="space-y-2" id="password-requirements">
+                    <div className="h-1.5 w-full rounded-full bg-white/10">
+                      <div
+                        className={`h-1.5 rounded-full transition-all duration-300 ${strengthColor}`}
+                        style={{ width: `${strengthPercent}%` }}
+                        role="progressbar"
+                        aria-valuenow={strengthScore}
+                        aria-valuemin={0}
+                        aria-valuemax={passwordRequirements.length}
+                        aria-label="Password strength"
+                      />
+                    </div>
+                    <ul className="space-y-1" aria-label="Password requirements">
+                      {metRequirements.map(({ label, met }) => (
+                        <li key={label} className={`flex items-center gap-2 text-xs ${met ? 'text-green-400' : 'text-brand-text-muted'}`}>
+                          <Check className={`h-3 w-3 shrink-0 ${met ? 'opacity-100' : 'opacity-20'}`} aria-hidden="true" />
+                          {label}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {errors.password && <p id="password-error" role="alert" className="text-sm text-red-400">{errors.password.message}</p>}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-6 pb-8 pt-4 px-8">
-              <Button 
-                type="submit" 
-                className="w-full h-12 text-base font-medium bg-primary text-white hover:bg-primary/90 shadow-[0_0_20px_rgba(240,165,0,0.3)] transition-all hover:shadow-[0_0_25px_rgba(240,165,0,0.5)]" 
+              <Button
+                type="submit"
+                className="w-full h-12 text-base font-medium bg-primary text-white hover:bg-primary/90 shadow-[0_0_20px_rgba(240,165,0,0.3)] transition-all hover:shadow-[0_0_25px_rgba(240,165,0,0.5)]"
                 disabled={isLoading || isWalletLoading}
               >
                 {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}

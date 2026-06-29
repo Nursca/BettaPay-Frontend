@@ -1,25 +1,17 @@
-29
-
-user avatar
-
-
- 
-15 matches
-#28 Ensure all forms are usable with mobile keyboards
+Add useCallback for event handlers in dashboard and settings
 Repo Avatar
 Betta-Pay/BettaPay-Frontend
-Description: When mobile keyboards are open, form fields can be hidden behind the keyboard. The login, register, payment link creation, and settings forms need to be scrollable and the active input should remain visible above the keyboard.
+Description: Inline functions passed as props (e.g., onClick, onChange, handleCopy) create new function references on every render, causing child components to re-render even with React.memo. Wrapping these in useCallback stabilizes the references.
 
 Requirements:
 
-Form containers should be within a scrollable area
-The or form wrapper should not have overflow: hidden that prevents scrolling to the focused input
-Test all forms with a mobile keyboard open (use Chrome DevTools device emulation)
-Ensure the submit button is reachable without scrolling excessively
+Wrap handleCopy, handleLogout, onSubmit, and other handlers in useCallback
+Include correct dependency arrays
+Apply across all pages with interactive elements
 Suggested execution steps:
 
-Review all form pages and verify the scroll behavior with keyboard open
-In app/auth/layout.tsx, ensure the form column uses overflow-y: auto not overflow: hidden
-Add scroll-margin-bottom: 200px to form submit buttons so they scroll above the keyboard
-Test the settings page form fields (business info, security) with keyboard open
-Test the payment link creation dialog — dialogs can be problematic with mobile keyboards
+In app/(merchant)/dashboard/page.tsx, wrap handleCopy and the period toggle handler in useCallback
+In app/(merchant)/settings/page.tsx, wrap handleLogout and tab change handlers
+In app/auth/login/page.tsx, wrap onSubmit and onWalletConnected
+In components/layout/Topbar.tsx, wrap handleLogout
+Use React DevTools Profiler to verify fewer re-renders

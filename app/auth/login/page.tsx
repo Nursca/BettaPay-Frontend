@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -49,7 +49,7 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = useCallback(async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
       const isMockAdmin = data.email.includes('admin');
@@ -102,10 +102,10 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [login, router, success, error]);
 
   // When WalletModal reports a connected address, perform the merchant login flow
-  const onWalletConnected = async (address: string) => {
+  const onWalletConnected = useCallback(async (address: string) => {
     setIsWalletLoading(true);
     try {
       const mockToken = 'mock_jwt_token_12345';
@@ -134,7 +134,7 @@ export default function LoginPage() {
     } finally {
       setIsWalletLoading(false);
     }
-  };
+  }, [login, success, error]);
 
 
   return (

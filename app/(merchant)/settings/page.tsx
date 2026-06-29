@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +27,7 @@ const notificationOptions = [
 ];
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('profile');
   const [notificationPreferences, setNotificationPreferences] = useState<Record<string, boolean>>({
     paymentReceived: true,
@@ -37,11 +38,15 @@ export default function SettingsPage() {
   const { user, logout } = useAuthStore();
   const notify = useNotify();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     notify.success('Logged out successfully');
     router.push('/auth/login');
-  };
+  }, [logout, router]);
+
+  const handleTabChange = useCallback((id: string) => {
+    setActiveTab(id);
+  }, []);
 
   const toggleNotificationPreference = (id: string) => {
     setNotificationPreferences((current) => ({
@@ -67,7 +72,7 @@ export default function SettingsPage() {
             {tabs.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
-                onClick={() => setActiveTab(id)}
+                onClick={() => handleTabChange(id)}
                 className={cn(
                   'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left',
                   activeTab === id

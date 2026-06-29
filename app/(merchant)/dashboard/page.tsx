@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -77,10 +77,14 @@ export default function DashboardPage() {
 
   const firstName = user?.name?.split(' ')[0] ?? 'Merchant';
 
-  const handleCopy = (text: string) => {
+  const handleCopy = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     notify.success('Copied to clipboard');
-  };
+  }, []);
+
+  const handlePeriodChange = useCallback((p: Period) => {
+    setActivePeriod(p);
+  }, []);
 
   const toggleSimulation = () => {
     const nextState = !simulationEnabled;
@@ -240,7 +244,7 @@ export default function DashboardPage() {
                 {PERIOD_OPTIONS.map((p) => (
                   <button
                     key={p}
-                    onClick={() => setActivePeriod(p)}
+                    onClick={() => handlePeriodChange(p)}
                     className={cn(
                       'min-h-[44px] min-w-[44px] px-3 py-1 rounded-md text-xs font-semibold transition-all',
                       activePeriod === p

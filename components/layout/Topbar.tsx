@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Bell, Search, Menu, LogOut, Settings, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,11 +34,11 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title, unreadNotificationCount
       ? `Notifications (${unreadNotificationCount} unread)`
       : "Notifications";
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     notify.success("Logged out successfully");
     router.push("/auth/login");
-  };
+  }, [logout, router]);
 
   const initials = user?.name
     ? user.name

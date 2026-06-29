@@ -6,6 +6,8 @@ export function middleware(request: NextRequest) {
   const role = request.cookies.get('user_role')?.value;
   
   const isAuthPage = request.nextUrl.pathname.startsWith('/auth');
+  // 2FA verification is reachable only after a partial login — allow unauthenticated access
+  const is2FAPage = request.nextUrl.pathname === '/auth/verify-2fa';
   const isPublicPayPage = request.nextUrl.pathname.startsWith('/pay');
   const isAdminRoute = request.nextUrl.pathname.startsWith('/admin') || 
                        request.nextUrl.pathname === '/overview' ||
@@ -20,8 +22,9 @@ export function middleware(request: NextRequest) {
   }
 
   // If trying to access auth pages while logged in, redirect to dashboard
+  // Exception: 2FA page is always accessible after partial login
   if (isAuthPage) {
-    if (token) {
+    if (token && !is2FAPage) {
       if (role === 'admin') {
         return NextResponse.redirect(new URL('/overview', request.url));
       }

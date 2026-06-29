@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { ErrorDisplay } from '@/components/shared/ErrorDisplay';
@@ -24,31 +26,17 @@ import {
 } from 'lucide-react';
 import { TransactionDetail } from '@/components/transactions/TransactionDetail';
 import { Transaction, mockTransactions as realTransactions } from '@/lib/mock/transactions';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from 'recharts';
 import { useAuthStore } from '@/lib/store/authStore';
 import Link from 'next/link';
 import { useNotify } from '@/lib/hooks/useNotify';
 import { cn } from '@/lib/utils';
 
-const notify = useNotify();
+const RevenueChart = dynamic(() => import('@/components/charts/RevenueChart'), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[260px] w-full rounded-xl" />,
+});
 
-const mockChartData = [
-  { name: 'Mon', total: 1200, volume: 8400 },
-  { name: 'Tue', total: 2100, volume: 14700 },
-  { name: 'Wed', total: 1800, volume: 12600 },
-  { name: 'Thu', total: 3200, volume: 22400 },
-  { name: 'Fri', total: 2800, volume: 19600 },
-  { name: 'Sat', total: 4100, volume: 28700 },
-  { name: 'Sun', total: 3800, volume: 26600 },
-];
+const notify = useNotify();
 
 const mockTransactions = realTransactions.slice(0, 5).map((tx, i) => {
   const oldData = [
@@ -61,7 +49,7 @@ const mockTransactions = realTransactions.slice(0, 5).map((tx, i) => {
   return {
     ...tx,
     ...oldData[i],
-    amountUsdc: oldData[i].amount, // Ensure amountUsdc matches what Dashboard expects now
+    amountUsdc: oldData[i].amount,
     address: tx.payerAddress.substring(0, 4) + '...' + tx.payerAddress.substring(tx.payerAddress.length - 4),
   };
 });
@@ -74,20 +62,6 @@ const mockPaymentLinks = [
 
 const PERIOD_OPTIONS = ['7D', '30D', '90D'] as const;
 type Period = typeof PERIOD_OPTIONS[number];
-
-// Custom Tooltip for recharts
-interface TooltipProps { active?: boolean; payload?: { value: number }[]; label?: string; }
-const ChartTooltip = ({ active, payload, label }: TooltipProps) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-lg text-sm">
-        <p className="font-semibold text-slate-700 mb-1">{label}</p>
-        <p className="text-amber-600 font-bold">${payload[0]?.value?.toLocaleString()}</p>
-      </div>
-    );
-  }
-  return null;
-};
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
@@ -268,7 +242,7 @@ export default function DashboardPage() {
                     key={p}
                     onClick={() => setActivePeriod(p)}
                     className={cn(
-                      'px-3 py-1 rounded-md text-xs font-semibold transition-all',
+                      'min-h-[44px] min-w-[44px] px-3 py-1 rounded-md text-xs font-semibold transition-all',
                       activePeriod === p
                         ? 'bg-white text-slate-900 shadow-sm'
                         : 'text-slate-400 hover:text-slate-600'
@@ -289,46 +263,7 @@ export default function DashboardPage() {
                 />
               </div>
             ) : (
-              <div className="h-[260px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={mockChartData} margin={{ top: 4, right: 4, bottom: 0, left: -16 }}>
-                    <defs>
-                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#F0A500" stopOpacity={0.25} />
-                        <stop offset="95%" stopColor="#F0A500" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-                    <XAxis
-                      dataKey="name"
-                      stroke="#CBD5E1"
-                      fontSize={11}
-                      tickLine={false}
-                      axisLine={false}
-                      tick={{ fill: '#94A3B8' }}
-                    />
-                    <YAxis
-                      stroke="#CBD5E1"
-                      fontSize={11}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(v) => `$${v}`}
-                      tick={{ fill: '#94A3B8' }}
-                    />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Area
-                      type="monotone"
-                      dataKey="total"
-                      stroke="#F0A500"
-                      strokeWidth={2.5}
-                      fillOpacity={1}
-                      fill="url(#colorRevenue)"
-                      dot={false}
-                      activeDot={{ r: 5, fill: '#F0A500', stroke: '#fff', strokeWidth: 2 }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+              <RevenueChart height={260} />
             )}
             {/* Summary row */}
             <div className="flex items-center gap-6 pt-4 border-t border-slate-100 mt-2">
@@ -354,7 +289,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold text-slate-900">Recent Activity</CardTitle>
               <Link href="/transactions">
-                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 h-7 px-2 rounded-lg font-semibold">
+                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 min-h-[44px] px-2 rounded-lg font-semibold">
                   View all <ChevronRight className="w-3 h-3 ml-0.5" />
                 </Button>
               </Link>
@@ -443,7 +378,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold text-slate-900">Payment Link Performance</CardTitle>
               <Link href="/payments">
-                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 h-7 px-2 rounded-lg font-semibold">
+                <Button variant="ghost" className="text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 min-h-[44px] px-2 rounded-lg font-semibold">
                   Manage <ArrowRight className="w-3 h-3 ml-0.5" />
                 </Button>
               </Link>
@@ -485,11 +420,11 @@ export default function DashboardPage() {
                         <span className="text-xs text-slate-400">{link.clicks} clicks</span>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" aria-label="Copy payment link" className="h-7 w-7 rounded-lg" onClick={() => handleCopy(`https://${link.url}`)}>
+                        <Button variant="ghost" size="icon" aria-label="Copy payment link" className="min-h-[44px] min-w-[44px] rounded-lg" onClick={() => handleCopy(`https://${link.url}`)}>
                           <Copy className="w-3 h-3 text-slate-400" />
                         </Button>
                         <Link href={`https://${link.url}`} target="_blank">
-                          <Button variant="ghost" size="icon" aria-label="Open payment link" className="h-7 w-7 rounded-lg">
+                          <Button variant="ghost" size="icon" aria-label="Open payment link" className="min-h-[44px] min-w-[44px] rounded-lg">
                             <ExternalLink className="w-3 h-3 text-slate-400" />
                           </Button>
                         </Link>

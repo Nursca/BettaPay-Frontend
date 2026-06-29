@@ -130,7 +130,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── KPI Stat Cards ── */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         {statsError ? (
           <div className="col-span-full">
             <ErrorDisplay
@@ -151,8 +151,8 @@ export default function DashboardPage() {
                   <Activity className="h-4 w-4 text-amber-600" />
                 </div>
               </CardHeader>
-              <CardContent className="relative">
-                <div className="text-2xl font-bold text-slate-900">
+              <CardContent className="p-3 sm:p-4 relative">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">
                   <CurrencyDisplay amount={45231.89} />
                 </div>
                 <p className="text-xs text-emerald-600 flex items-center mt-1.5 font-medium">
@@ -173,8 +173,8 @@ export default function DashboardPage() {
                   <CreditCard className="h-4 w-4 text-blue-600" />
                 </div>
               </CardHeader>
-              <CardContent className="relative">
-                <div className="text-2xl font-bold text-slate-900">12</div>
+              <CardContent className="p-3 sm:p-4 relative">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">12</div>
                 <p className="text-xs text-slate-400 mt-1.5 font-medium">
                   +3 new links this week
                 </p>
@@ -192,8 +192,8 @@ export default function DashboardPage() {
                   <Wallet className="h-4 w-4 text-emerald-600" />
                 </div>
               </CardHeader>
-              <CardContent className="relative">
-                <div className="text-2xl font-bold text-slate-900">
+              <CardContent className="p-3 sm:p-4 relative">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">
                   <CurrencyDisplay amount={12450.00} />
                 </div>
                 <p className="text-xs text-amber-500 flex items-center mt-1.5 font-medium">
@@ -214,8 +214,8 @@ export default function DashboardPage() {
                   <RefreshCcw className="h-4 w-4 text-purple-600" />
                 </div>
               </CardHeader>
-              <CardContent className="relative">
-                <div className="text-2xl font-bold text-slate-900">₦1,550</div>
+              <CardContent className="p-3 sm:p-4 relative">
+                <div className="text-xl sm:text-2xl font-bold text-slate-900">₦1,550</div>
                 <p className="text-xs text-slate-400 mt-1.5 font-medium">
                   per USDC · Updated 5m ago
                 </p>

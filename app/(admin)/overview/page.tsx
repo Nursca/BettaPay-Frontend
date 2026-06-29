@@ -21,15 +21,15 @@ export default function AdminOverviewPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card border shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-10 -mt-10 blur-xl"></div>
           <CardHeader className="flex flex-row items-center justify-between pb-2 z-10 relative">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Processed (30d)</CardTitle>
             <Activity className="h-4 w-4 text-primary" />
           </CardHeader>
-          <CardContent className="z-10 relative">
-            <div className="text-2xl font-bold text-foreground">
+          <CardContent className="p-3 sm:p-4 z-10 relative">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">
               <CurrencyDisplay amount={1452310.89} />
             </div>
             <p className="text-xs text-green-500 flex items-center mt-1">
@@ -44,8 +44,8 @@ export default function AdminOverviewPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Platform Fees Generated</CardTitle>
             <DollarSign className="h-4 w-4 text-green-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">
+          <CardContent className="p-3 sm:p-4">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">
               <CurrencyDisplay amount={14523.10} />
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -59,8 +59,8 @@ export default function AdminOverviewPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Active Merchants</CardTitle>
             <Users className="h-4 w-4 text-primary" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">142</div>
+          <CardContent className="p-3 sm:p-4">
+            <div className="text-xl sm:text-2xl font-bold text-foreground">142</div>
             <p className="text-xs text-green-500 flex items-center mt-1">
               <ArrowUpRight className="h-3 w-3 mr-1" />
               +12 new this week
@@ -73,8 +73,8 @@ export default function AdminOverviewPage() {
             <CardTitle className="text-sm font-medium text-destructive">Pending KYB Reviews</CardTitle>
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-destructive">8</div>
+          <CardContent className="p-3 sm:p-4">
+            <div className="text-xl sm:text-2xl font-bold text-destructive">8</div>
             <p className="text-xs text-destructive/80 mt-1">
               Requires immediate action
             </p>

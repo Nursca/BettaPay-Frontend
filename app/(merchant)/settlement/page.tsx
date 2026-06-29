@@ -84,14 +84,14 @@ export default function SettlementPage() {
       </div>
 
       {/* Balance summary */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
         <Card className="border border-slate-200 bg-white shadow-sm relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent pointer-events-none" />
           <CardHeader className="pb-2 relative">
             <CardTitle className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Available to Settle</CardTitle>
           </CardHeader>
-          <CardContent className="relative">
-            <p className="text-2xl font-bold text-slate-900"><CurrencyDisplay amount={12450.00} /></p>
+          <CardContent className="p-3 sm:p-4 relative">
+            <p className="text-xl sm:text-2xl font-bold text-slate-900"><CurrencyDisplay amount={12450.00} /></p>
             <p className="text-xs text-slate-400 mt-1">≈ ₦19,297,500</p>
           </CardContent>
         </Card>
@@ -99,8 +99,8 @@ export default function SettlementPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pending Settlement</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-slate-900"><CurrencyDisplay amount={8200.50} /></p>
+          <CardContent className="p-3 sm:p-4">
+            <p className="text-xl sm:text-2xl font-bold text-slate-900"><CurrencyDisplay amount={8200.50} /></p>
             <p className="text-xs text-amber-500 mt-1 flex items-center gap-1"><Clock className="w-3 h-3" /> Processing</p>
           </CardContent>
         </Card>
@@ -108,8 +108,8 @@ export default function SettlementPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Settled (30d)</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-slate-900"><CurrencyDisplay amount={38750.00} /></p>
+          <CardContent className="p-3 sm:p-4">
+            <p className="text-xl sm:text-2xl font-bold text-slate-900"><CurrencyDisplay amount={38750.00} /></p>
             <p className="text-xs text-emerald-600 mt-1 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> All completed</p>
           </CardContent>
         </Card>

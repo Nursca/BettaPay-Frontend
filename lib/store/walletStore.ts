@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { AssetBalance } from '../types';
 import { connectFreighter, FreighterNotInstalledError, FreighterCancelledError, FreighterNetworkMismatchError } from '@/lib/stellar/freighter';
+import { retryWithBackoff } from '../utils/retry';
 
 type Connector = 'freighter' | 'walletconnect' | null;
 
@@ -30,6 +31,7 @@ interface WalletState {
   network: 'testnet' | 'public';
   balances: AssetBalance[];
   loading: boolean;
+  isReconnecting: boolean;
   error: string | null;
   connectError: ConnectError | null;
   connect: (connector?: Connector) => Promise<void>;
@@ -46,6 +48,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   network: getNetwork(),
   balances: [],
   loading: false,
+  isReconnecting: false,
   error: null,
 
   connect: async (connector: Connector = 'freighter') => {
@@ -89,7 +92,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   },
 
   disconnect: () => {
-    set({ address: null, isConnected: false, connector: null, balances: [], loading: false, error: null, connectError: null });
+    set({ address: null, isConnected: false, connector: null, balances: [], loading: false, isReconnecting: false, error: null, connectError: null });
   },
 
   clearConnectError: () => {
@@ -105,24 +108,37 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     const { address, network } = get();
     if (!address) return;
 
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, isReconnecting: false });
 
     const horizonUrl = NETWORK_URLS[network];
 
     try {
-      const response = await fetch(`${horizonUrl}/accounts/${address}`);
+      const result = await retryWithBackoff(async () => {
+        const response = await fetch(`${horizonUrl}/accounts/${address}`);
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          set({ balances: [], loading: false });
-          return;
+        if (!response.ok) {
+          if (response.status === 404) {
+            return 'NOT_FOUND' as const;
+          }
+          throw new Error(`Horizon error: ${response.status} ${response.statusText}`);
         }
-        throw new Error(`Horizon error: ${response.status} ${response.statusText}`);
+
+        return await response.json();
+      }, {
+        maxRetries: 3,
+        onRetry: () => { set({ isReconnecting: true }); },
+      });
+
+      set({ isReconnecting: false });
+
+      if (result === 'NOT_FOUND') {
+        set({ balances: [], loading: false });
+        return;
       }
 
-      const data = await response.json();
+      const data = result as { balances: Array<{ asset_type: string; balance: string; asset_code?: string; asset_issuer?: string }> };
 
-      const balances: AssetBalance[] = data.balances.map((b: { asset_type: string; balance: string; asset_code?: string; asset_issuer?: string }) => {
+      const balances: AssetBalance[] = data.balances.map((b) => {
         if (b.asset_type === 'native') {
           return { assetCode: 'XLM', balance: b.balance };
         }
@@ -138,6 +154,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       console.error('Failed to refresh balances', error);
       set({
         loading: false,
+        isReconnecting: false,
         error: error instanceof Error ? error.message : 'Failed to fetch balances',
       });
     }

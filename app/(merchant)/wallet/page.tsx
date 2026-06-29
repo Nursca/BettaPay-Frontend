@@ -111,7 +111,7 @@ function BalanceSkeleton() {
 
 export default function WalletPage() {
   const { user } = useAuthStore();
-  const { address: walletAddress, balances, loading, error, refreshBalances } = useWalletStore();
+  const { address: walletAddress, balances, loading, isReconnecting, error, refreshBalances } = useWalletStore();
   const { success } = useNotify();
 
   const address = walletAddress ?? user?.id ?? "";
@@ -233,6 +233,14 @@ export default function WalletPage() {
           </div>
         </div>
       </div>
+
+      {/* Reconnecting Banner */}
+      {isReconnecting && (
+        <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950/30 text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 animate-pulse">
+          <RefreshCcw className="w-3.5 h-3.5 animate-spin" />
+          <span>Reconnecting... Retrying to fetch balances</span>
+        </div>
+      )}
 
       {/* Loading State */}
       {loading && balances.length === 0 && (

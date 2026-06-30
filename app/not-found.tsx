@@ -35,7 +35,7 @@ export default function NotFound() {
                 </p>
                 <div className="flex flex-col sm:flex-row items-center gap-3">
                   <Link href="/dashboard">
-                    <Button className="shadow-sm shadow-primary/20">
+                    <Button className="shadow-button">
                       <Home className="w-4 h-4 mr-2" />
                       Back to Dashboard
                     </Button>
@@ -75,7 +75,7 @@ export default function NotFound() {
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <Link href="/">
-              <Button className="shadow-sm shadow-primary/20">
+              <Button className="shadow-button">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Go Home
               </Button>

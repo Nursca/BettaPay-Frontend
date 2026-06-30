@@ -135,7 +135,7 @@ export default function DashboardPage() {
             {simulationEnabled ? "Reset API" : "Simulate API Error"}
           </Button>
           <Link href="/payments">
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-10 px-4 text-sm shadow-sm shadow-primary/20 transition-all">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-10 px-4 text-sm shadow-button transition-all">
               <Plus className="w-4 h-4 mr-2" />
               New Payment Link
             </Button>

@@ -79,7 +79,7 @@ export default function SettlementPage() {
             disabled={!isOnline}
             aria-disabled={!isOnline}
             onClick={() => setSettlementOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-10 px-5 text-sm shadow-sm shadow-primary/20"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-10 px-5 text-sm shadow-button"
           >
             <Banknote className="w-4 h-4 mr-2" />
             Initiate Settlement

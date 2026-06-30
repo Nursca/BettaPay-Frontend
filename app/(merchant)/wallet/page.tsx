@@ -63,7 +63,7 @@ export default function WalletPage() {
       </div>
 
       {/* Wallet Card */}
-      <div className="relative rounded-2xl overflow-hidden bg-foreground p-4 sm:p-6 text-background shadow-xl">
+      <div className="relative rounded-2xl overflow-hidden bg-foreground p-4 sm:p-6 text-background shadow-surface-xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full -ml-16 -mb-16 blur-3xl pointer-events-none" />
 

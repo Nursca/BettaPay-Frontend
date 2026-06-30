@@ -180,7 +180,7 @@ export const Topbar = ({ onMenuClick, isMenuOpen, title, unreadNotificationCount
             }
           />
           <DropdownMenuContent
-            className="w-56 border-border shadow-lg rounded-xl mt-1"
+            className="w-56 border-border shadow-dropdown rounded-xl mt-1"
             align="end"
           >
             <DropdownMenuLabel className="font-normal">

@@ -26,7 +26,7 @@ export function Providers({ children }: { children: ReactNode }) {
   });
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
       <OfflineBanner />
       {children}
       {isAuthenticated && (

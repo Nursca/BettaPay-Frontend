@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, memo, useMemo, useRef } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { useState, memo, useMemo } from 'react';
+import { useDebounceValue } from 'usehooks-ts';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { CurrencyDisplay } from '@/components/shared/CurrencyDisplay';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { mockTransactions } from '@/lib/mock/transactions';
 import { formatDate } from '@/lib/utils/format';
+import { sanitizeSearchQuery } from '@/lib/utils/sanitize';
 import { Search, Download, Filter, SearchX } from 'lucide-react';
 import { TransactionDetail } from '@/components/transactions/TransactionDetail';
 import { Transaction } from '@/lib/mock/transactions';
@@ -97,6 +98,8 @@ const TransactionCard = memo(function TransactionCard({ tx, onClick }: Transacti
 
 export default function TransactionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const sanitizedOnChange = (value: string) => setSearchTerm(sanitizeSearchQuery(value));
+  const debouncedSearch = useDebounceValue(searchTerm, 300);
   const [filterCount] = useState(0);
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const isOnline = useOfflineStore((s) => s.isOnline);
@@ -104,10 +107,10 @@ export default function TransactionsPage() {
 
   const filteredTransactions = useMemo(() =>
     mockTransactions.filter(tx =>
-      tx.txHash.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tx.payerAddress.toLowerCase().includes(searchTerm.toLowerCase())
+      tx.txHash.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      tx.payerAddress.toLowerCase().includes(debouncedSearch.toLowerCase())
     ),
-    [searchTerm, mockTransactions]
+    [debouncedSearch]
   );
 
   const virtualizer = useVirtualizer({
@@ -139,17 +142,17 @@ export default function TransactionsPage() {
             <Input
               type="search"
               placeholder="Search by hash or address..."
-              className="w-full pl-9 bg-background/50 border-border/50 focus-visible:ring-brand-accent"
+              className="w-full pl-9 bg-background/50 border-border/50 focus-visible:ring-ring"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+               onChange={(e) => sanitizedOnChange(e.target.value)}
             />
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="relative flex-1 sm:flex-none border-border/50 bg-brand-surface">
+            <Button variant="outline" className="relative flex-1 sm:flex-none border-border/50 bg-card">
               <Filter className="w-4 h-4 mr-2" />
               Filter
               {filterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">
+                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                   {filterCount}
                 </span>
               )}
@@ -159,7 +162,7 @@ export default function TransactionsPage() {
                 variant="outline"
                 disabled={!isOnline}
                 aria-disabled={!isOnline}
-                className="flex-1 sm:flex-none border-border/50 bg-brand-surface"
+                className="flex-1 sm:flex-none border-border/50 bg-card"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
@@ -175,7 +178,7 @@ export default function TransactionsPage() {
           : `Showing ${filteredTransactions.length} transaction${filteredTransactions.length !== 1 ? 's' : ''}`}
       </p>
 
-      <Card className="bg-brand-surface border-border/50 shadow-sm">
+      <Card className="bg-card border-border/50 shadow-sm">
         <CardContent className="pt-4">
           {filteredTransactions.length === 0 ? (
             <EmptyState

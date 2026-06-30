@@ -10,6 +10,7 @@ import { Loader2, Check } from 'lucide-react';
 import { useNotify } from '@/lib/hooks/useNotify';
 
 import { registerSchema, RegisterFormValues, passwordRequirements } from '@/lib/utils/validation';
+import { trimInput, normalizeEmail } from '@/lib/utils/sanitize';
 import { useWalletStore } from '@/lib/store/walletStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,12 +56,17 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
+    const sanitizedData = {
+      ...data,
+      businessName: trimInput(data.businessName),
+      email: normalizeEmail(data.email),
+    };
     try {
       try {
         const { apiClient } = await import('@/lib/api/axios');
         await apiClient.post('/api/merchants', {
           id: `merch_${Math.random().toString(36).substr(2, 9)}`,
-          name: data.businessName,
+          name: sanitizedData.businessName,
         });
       } catch {
         console.warn('Backend unavailable, falling back to mock registration for Vercel preview.');

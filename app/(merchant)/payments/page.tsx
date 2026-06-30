@@ -18,6 +18,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { trimInput } from '@/lib/utils/sanitize';
 import { useNotify } from '@/lib/hooks/useNotify';
 
 interface PaymentLink {
@@ -76,7 +77,8 @@ export default function PaymentsPage() {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!labelValue.trim()) {
+    const sanitizedLabel = trimInput(labelValue);
+    if (!sanitizedLabel) {
       setLabelError('Label is required');
       return;
     }

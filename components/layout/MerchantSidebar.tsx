@@ -59,23 +59,18 @@ export const MerchantSidebar = () => {
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                "group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all",
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
                 isActive
-                  ? "bg-primary/10 text-primary border border-primary/30 font-semibold shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground font-medium border border-transparent",
+                  ? "bg-primary/10 text-primary border border-primary/30"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              <div className="relative flex items-center">
-                <Icon
-                  className={cn(
-                    "w-5 h-5 transition-colors",
-                    isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
-                  )}
-                />
-                {isActive && (
-                  <span className="absolute -right-1 -top-1 w-2 h-2 rounded-full bg-primary" />
+              <Icon
+                className={cn(
+                  "w-4.5 h-4.5",
+                  isActive ? "text-primary" : "text-muted-foreground",
                 )}
-              </div>
+              />
               {item.label}
             </Link>
           );
@@ -92,7 +87,7 @@ export const MerchantSidebar = () => {
             <span className="text-sm font-semibold text-foreground truncate">
               Merchant Corp
             </span>
-            <span className="text-xs text-success flex items-center gap-1 font-medium">
+            <span className="text-xs text-emerald-600 flex items-center gap-1 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
               Verified
             </span>

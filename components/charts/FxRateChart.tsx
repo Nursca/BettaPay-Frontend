@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
 import {
   ResponsiveContainer,
   LineChart,
@@ -29,20 +28,11 @@ interface FxTooltipProps {
 }
 
 const FxTooltip = ({ active, payload, label }: FxTooltipProps) => {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
   if (active && payload && payload.length) {
     return (
-      <div 
-        className="border rounded-xl p-3 shadow-lg text-sm"
-        style={{ 
-          backgroundColor: isDark ? "var(--card)" : "var(--card)",
-          borderColor: isDark ? "var(--border)" : "var(--border)",
-        }}
-      >
-        <p className="font-semibold mb-1" style={{ color: isDark ? "var(--foreground)" : "var(--foreground)" }}>{label}</p>
-        <p className="font-bold" style={{ color: isDark ? "var(--primary)" : "var(--primary)" }}>
+      <div className="bg-card border border-border rounded-xl p-3 shadow-lg text-sm">
+        <p className="font-semibold text-foreground mb-1">{label}</p>
+        <p className="text-primary font-bold">
           ₦{payload[0]?.value?.toLocaleString()}
         </p>
       </div>

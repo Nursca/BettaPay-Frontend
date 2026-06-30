@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -30,20 +29,11 @@ interface ChartTooltipProps {
 }
 
 const ChartTooltip = ({ active, payload, label }: ChartTooltipProps) => {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
   if (active && payload && payload.length) {
     return (
-      <div 
-        className="border rounded-xl p-3 shadow-lg text-sm"
-        style={{ 
-          backgroundColor: isDark ? "var(--card)" : "var(--card)",
-          borderColor: isDark ? "var(--border)" : "var(--border)",
-        }}
-      >
-        <p className="font-semibold mb-1" style={{ color: isDark ? "var(--foreground)" : "var(--foreground)" }}>{label}</p>
-        <p className="font-bold" style={{ color: isDark ? "var(--primary)" : "var(--primary)" }}>
+      <div className="bg-card border border-border rounded-xl p-3 shadow-lg text-sm">
+        <p className="font-semibold text-foreground mb-1">{label}</p>
+        <p className="text-primary font-bold">
           ${payload[0]?.value?.toLocaleString()}
         </p>
       </div>
@@ -58,8 +48,6 @@ interface RevenueChartProps {
 
 export default function RevenueChart({ height = 260 }: RevenueChartProps) {
   const [isMobile, setIsMobile] = useState(false);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
@@ -78,8 +66,8 @@ export default function RevenueChart({ height = 260 }: RevenueChartProps) {
         >
           <defs>
             <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="var(--primary)" stopOpacity={isDark ? 0.4 : 0.25} />
-              <stop offset="95%" stopColor="var(--primary)" stopOpacity={isDark ? 0.05 : 0} />
+              <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.25} />
+              <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid

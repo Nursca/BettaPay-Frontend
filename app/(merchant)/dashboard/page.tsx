@@ -21,7 +21,8 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { TransactionDetail } from '@/components/transactions/TransactionDetail';
-import { Transaction, mockTransactions as realTransactions } from '@/lib/mock/transactions';
+import { Transaction } from '@/lib/mock/transactions';
+import { mockTransactions, mockPaymentLinks } from '@/lib/mock/dashboard';
 import { useAuthStore } from '@/lib/store/authStore';
 import Link from 'next/link';
 import { useNotify } from '@/lib/hooks/useNotify';

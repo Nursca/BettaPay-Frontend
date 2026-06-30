@@ -16,6 +16,8 @@ import { useNotify } from "@/lib/hooks/useNotify";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useWalletStore } from "@/lib/store/walletStore";
 import Image from "next/image";
+import { memo } from "react";
+import { mockTxHistory, type WalletTx } from "@/lib/mock/wallet";
 
 const WalletActivityHistory = dynamic(() => import('@/components/wallet/WalletActivityHistory').then(m => ({ default: m.WalletActivityHistory })), {
   loading: () => <Skeleton className="h-64 rounded-xl" />,

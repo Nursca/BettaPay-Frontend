@@ -88,89 +88,111 @@ const StatCards = memo(function StatCards({ error, onRetry }: StatCardsProps) {
     );
   }
   return (
-    <>
-      {/* Card 1 */}
-      <Card className="relative overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent pointer-events-none" />
-        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Total Volume (30d)
-          </CardTitle>
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-            <Activity className="h-4 w-4 text-primary" />
-          </div>
-        </CardHeader>
-        <CardContent className="p-3 sm:p-4 relative">
-          <div className="text-xl sm:text-2xl font-bold text-foreground">
-            <CurrencyDisplay amount={45231.89} />
-          </div>
-          <p className="text-xs text-emerald-600 flex items-center mt-1.5 font-medium">
-            <ArrowUpRight className="h-3 w-3 mr-1" />
-            +20.1% from last month
-          </p>
-        </CardContent>
-      </Card>
+      <div className="grid gap-4 lg:grid-cols-3 mb-2">
+        {/* Left Column: Total Volume (main card) */}
+        <div className="lg:col-span-1">
+          <Card className="h-full relative overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+            <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
+              <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Total Volume (30d)
+              </CardTitle>
+              <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Activity className="h-4.5 w-4.5 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 relative flex flex-col justify-end h-[calc(100%-4rem)]">
+              <div className="text-3xl font-bold text-foreground mb-2">
+                <CurrencyDisplay amount={45231.89} />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="flex items-center text-xs font-semibold text-success bg-success/10 px-2 py-1 rounded-full">
+                  <ArrowUpRight className="h-3 w-3 mr-1" />
+                  +20.1%
+                </span>
+                <span className="text-xs text-muted-foreground">vs last month</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Card 2 */}
-      <Card className="relative overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/60 to-transparent pointer-events-none" />
-        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Active Payment Links
-          </CardTitle>
-          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-            <CreditCard className="h-4 w-4 text-blue-600" />
-          </div>
-        </CardHeader>
-        <CardContent className="p-3 sm:p-4 relative">
-          <div className="text-xl sm:text-2xl font-bold text-foreground">12</div>
-          <p className="text-xs text-muted-foreground mt-1.5 font-medium">
-            +3 new links this week
-          </p>
-        </CardContent>
-      </Card>
+        {/* Middle Column: Settlement & Payment Links (Combined vertical stack) */}
+        <div className="lg:col-span-1 flex flex-col gap-4">
+          {/* Available to Settle (combining USDC and NGN) */}
+          <Card className="border border-border bg-card shadow-sm flex-1">
+            <CardContent className="p-4 flex flex-col justify-center h-full">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Available to Settle</span>
+                <Wallet className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="flex items-end justify-between">
+                <div>
+                  <div className="text-2xl font-bold text-foreground">
+                    <CurrencyDisplay amount={12450.0} />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">≈ ₦19,297,500</p>
+                </div>
+                <Link href="/settlement">
+                  <Button variant="ghost" size="sm" className="h-8 text-xs text-primary hover:text-primary hover:bg-primary/10 px-2 rounded-lg -mr-2">
+                    Settle <ChevronRight className="w-3 h-3 ml-0.5" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
 
-      {/* Card 3 */}
-      <Card className="relative overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/60 to-transparent pointer-events-none" />
-        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Available to Settle
-          </CardTitle>
-          <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-            <Wallet className="h-4 w-4 text-emerald-600" />
-          </div>
-        </CardHeader>
-        <CardContent className="p-3 sm:p-4 relative">
-          <div className="text-xl sm:text-2xl font-bold text-foreground">
-            <CurrencyDisplay amount={12450.0} />
-          </div>
-          <p className="text-xs text-primary flex items-center mt-1.5 font-medium">
-            <ArrowDownRight className="h-3 w-3 mr-1" />
-            Pending NGN conversion
-          </p>
-        </CardContent>
-      </Card>
+          {/* Active Payment Links (Horizontal Stat) */}
+          <Card className="border border-border bg-card shadow-sm">
+            <CardContent className="p-4 flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-info/10 flex items-center justify-center">
+                  <CreditCard className="h-4 w-4 text-info" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Active Links</p>
+                  <p className="text-lg font-bold text-foreground">12</p>
+                </div>
+              </div>
+              <span className="text-xs text-info font-semibold flex items-center bg-info/10 px-2 py-1 rounded-full">
+                +3 this week
+              </span>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Card 4 */}
-      <Card className="relative overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/60 to-transparent pointer-events-none" />
-        <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
-          <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Current FX Rate
-          </CardTitle>
-          <div className="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
-            <RefreshCcw className="h-4 w-4 text-purple-600" />
-          </div>
-        </CardHeader>
-        <CardContent className="p-3 sm:p-4 relative">
-          <div className="text-xl sm:text-2xl font-bold text-foreground">₦1,550</div>
-          <p className="text-xs text-muted-foreground mt-1.5 font-medium">
-            per USDC · Updated 5m ago
-          </p>
-        </CardContent>
-      </Card>
-    </>
+        {/* Right Column: FX Rate with sparkline */}
+        <div className="lg:col-span-1">
+          <Card className="h-full border border-border bg-card shadow-sm">
+            <CardContent className="p-4 flex flex-col justify-between h-full">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <RefreshCcw className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Current FX Rate</span>
+                </div>
+                <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full font-medium tracking-wide">5M AGO</span>
+              </div>
+              
+              <div className="flex items-end justify-between mt-4 mb-3">
+                <div>
+                  <div className="text-3xl font-bold text-foreground">₦1,550</div>
+                  <p className="text-xs text-muted-foreground mt-1 font-medium">per 1 USDC</p>
+                </div>
+                {/* Fake Sparkline */}
+                <div className="w-20 h-10 opacity-80 mb-2">
+                  <svg viewBox="0 0 100 30" className="w-full h-full overflow-visible" aria-hidden="true">
+                    <path d="M0,25 C10,25 15,20 25,18 C35,16 45,22 55,15 C65,8 75,5 85,10 C95,15 100,5 100,5" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <circle cx="100" cy="5" r="3" fill="var(--card)" stroke="var(--primary)" strokeWidth="2" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-xs text-success flex items-center font-medium bg-success/5 p-1.5 rounded-md w-fit">
+                <ArrowUpRight className="h-3 w-3 mr-1" />
+                +1.2% vs yesterday
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
   );
 });
 

@@ -78,35 +78,53 @@ export default function SettlementPage() {
       />
 
       {/* Balance summary */}
-      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-        <Card className="border border-border bg-card shadow-sm relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent pointer-events-none" />
-          <CardHeader className="pb-2 relative">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Available to Settle</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3 sm:p-4 relative">
-            <p className="text-xl sm:text-2xl font-bold text-foreground"><CurrencyDisplay amount={12450.00} /></p>
-            <p className="text-xs text-muted-foreground mt-1">≈ ₦19,297,500</p>
-          </CardContent>
-        </Card>
-        <Card className="border border-border bg-card shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pending Settlement</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3 sm:p-4">
-            <p className="text-xl sm:text-2xl font-bold text-foreground"><CurrencyDisplay amount={8200.50} /></p>
-            <p className="text-xs text-primary mt-1 flex items-center gap-1"><Clock className="w-3 h-3" /> Processing</p>
-          </CardContent>
-        </Card>
-        <Card className="border border-border bg-card shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Settled (30d)</CardTitle>
-          </CardHeader>
-          <CardContent className="p-3 sm:p-4">
-            <p className="text-xl sm:text-2xl font-bold text-foreground"><CurrencyDisplay amount={38750.00} /></p>
-            <p className="text-xs text-success mt-1 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> All completed</p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 sm:grid-cols-3 mb-2">
+        <div className="sm:col-span-2">
+          <Card className="h-full border border-border bg-card shadow-sm relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
+            <CardContent className="p-6 relative flex flex-col justify-center h-full">
+              <div className="flex items-center gap-2 mb-4">
+                <Wallet className="w-5 h-5 text-primary" />
+                <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Available to Settle</span>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-6">
+                <div>
+                  <p className="text-4xl font-bold text-foreground"><CurrencyDisplay amount={12450.00} /></p>
+                </div>
+                <div className="flex items-center gap-2 pb-1">
+                  <div className="h-6 w-px bg-border hidden sm:block" />
+                  <p className="text-lg font-medium text-muted-foreground">≈ ₦19,297,500</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="sm:col-span-1 flex flex-col gap-4">
+          <Card className="border border-border bg-card shadow-sm flex-1">
+            <CardContent className="p-4 flex flex-col justify-center h-full">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Pending Settlement</p>
+              <div className="flex items-end justify-between">
+                <p className="text-xl font-bold text-foreground"><CurrencyDisplay amount={8200.50} /></p>
+                <span className="text-xs text-primary font-medium flex items-center bg-primary/10 px-2 py-1 rounded-md">
+                  <Clock className="w-3 h-3 mr-1" /> Processing
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border border-border bg-card shadow-sm flex-1">
+            <CardContent className="p-4 flex flex-col justify-center h-full">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Total Settled (30d)</p>
+              <div className="flex items-end justify-between">
+                <p className="text-xl font-bold text-foreground"><CurrencyDisplay amount={38750.00} /></p>
+                <span className="text-xs text-success font-medium flex items-center bg-success/10 px-2 py-1 rounded-md">
+                  <CheckCircle2 className="w-3 h-3 mr-1" /> Completed
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Settlement history */}
